@@ -35,11 +35,13 @@ if(isNaN(field))
 sum+=field
 tab.push(field)
 }
-console.log(tab)
 wynik.innerHTML = `Suma : ${sum}`
 wynik2.innerHTML = `Min : ${Math.min(...tab)}`
-//wynik.innerHTML = `Suma: ${Number.parseInt(liczba1.value)+Number.parseInt(liczba2.value)+Number.parseInt(liczba3.value)+Number.parseInt(liczba4.value)}`
-//wynik2.innerHTML = `Min : ${Math.min(parseInt(liczba1.value),parseInt(liczba2.value),parseInt(liczba3.value),parseInt(liczba4.value))}`
-wynik3.innerHTML = `Max : ${Math.max(parseInt(liczba1.value),parseInt(liczba2.value),parseInt(liczba3.value),parseInt(liczba4.value))}`
-wynik4.innerHTML = `Średnia : ${(parseInt(liczba1.value)+parseInt(liczba2.value)+parseInt(liczba3.value)+parseInt(liczba4.value))/4} `
+wynik3.innerHTML = `Max : ${Math.max(...tab)}`
+let suma=0
+tab.forEach(x=>{
+suma=suma+parseInt(x)
+}
+)
+wynik4.innerHTML = `Średnia : ${suma/tab.length}`
 }
