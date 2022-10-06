@@ -1,40 +1,42 @@
 
-
-const liczba1 =  document.querySelector('#liczba1')
-const liczba2 =  document.querySelector('#liczba2')
-const liczba3 = document.querySelector('#liczba3')
-const liczba4 = document.querySelector('#liczba4')
+const NewField = document.querySelector('#dodaj')
 const przeliczBtn = document.querySelector("#przelicz")
-const input = document.querySelectorAll('.inputField')
+const output = document.querySelector('#newField')
 const wynik = document.querySelector('#wynik');
 const wynik2 = document.querySelector('#wynik2');
 const wynik3 = document.querySelector('#wynik3');
 const wynik4 = document.querySelector('#wynik4');
-input.forEach(element=>
+const btn = document.querySelectorAll('.del')
+const delete_btn=document.querySelectorAll('.delete')
 
-element.addEventListener('input',przelicz)
+let input = document.querySelectorAll('.inputField')
+let index =1
+let tab_field=[]
 
-)
-
-przeliczBtn.addEventListener('click',()=>{
-wynik.innerHTML = `Suma: ${Number.parseInt(liczba1.value)+Number.parseInt(liczba2.value)+Number.parseInt(liczba3.value)+Number.parseInt(liczba4.value)}`
-wynik2.innerHTML = `Min : ${Math.min(parseInt(liczba1.value),parseInt(liczba2.value),parseInt(liczba3.value),parseInt(liczba4.value))}`
-wynik3.innerHTML = `Max : ${Math.max(parseInt(liczba1.value),parseInt(liczba2.value),parseInt(liczba3.value),parseInt(liczba4.value))}`
-wynik4.innerHTML = `Średnia : ${(parseInt(liczba1.value)+parseInt(liczba2.value)+parseInt(liczba3.value)+parseInt(liczba4.value))/4} `
+window.onload = () => {
+    for (let index = 0; index < 3; index++) {
+        add_field()
+    }
+  };
+NewField.addEventListener('click',()=>{
+   add_field()
 })
+input.forEach(element=>
+    element.addEventListener('input',przelicz)
+    )
 function przelicz(){
     let sum=0
     let tab=[]
-for(let x=1;x<5;x++)
+
+tab_field.forEach (element=>{
+    console.log(element)
+let field = parseInt(eval(`liczba${element.slice(-1)}.value`))
+if(!isNaN(field))
 {
-const field = parseInt(eval(`liczba${x}.value`))
-if(isNaN(field))
-{
-    continue
+    sum+=field
+    tab.push(field)
 }
-sum+=field
-tab.push(field)
-}
+
 wynik.innerHTML = `Suma : ${sum}`
 wynik2.innerHTML = `Min : ${Math.min(...tab)}`
 wynik3.innerHTML = `Max : ${Math.max(...tab)}`
@@ -44,4 +46,40 @@ suma=suma+parseInt(x)
 }
 )
 wynik4.innerHTML = `Średnia : ${suma/tab.length}`
+})
+}
+function add_field(){
+    var field_new =document.createElement("div")
+    var vdiv = document.createElement("input")
+    var del_btn = document.createElement("button")
+    field_new.setAttribute("id",`del${index}`)
+    field_new.setAttribute("class",'Oneline')
+    del_btn.setAttribute("class",`del`)
+    vdiv.setAttribute("id", `liczba${index}`)
+    vdiv.setAttribute("class", `inputField`)
+    del_btn.setAttribute("onclick", "remove(this.parentNode.id)")
+    del_btn.setAttribute("class","fa fa-trash btn_del")
+    index+=1
+    field_new.appendChild(del_btn)
+    field_new.appendChild(vdiv)
+    output.appendChild(field_new)
+    tab_field.push(vdiv.id)
+    input = document.querySelectorAll('.inputField')
+    vdiv.addEventListener('input',przelicz)
+}
+function remove(e) {
+    if(tab_field.length>2)
+    {
+        var index = tab_field.indexOf(`liczba${e.slice(-1)}`);
+        if (index !== -1) {
+          tab_field.splice(index, 1);
+        }
+        document.querySelector(`#${e}`).remove()
+        document.getElementById("wrong").style.display="none"
+        przelicz()
+    }else{
+        document.getElementById("wrong").style.display="block"
+    }
+
+
 }
