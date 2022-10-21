@@ -1,0 +1,39 @@
+#circle {
+    width:100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: green;
+    padding-top: 15px;
+    text-align: center;
+  }
+  #display{
+    margin-top:50px ;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .key{
+    text-align: center;
+    font-size: 50px;
+    height: 100px;
+    width: 20%;
+    background-color: rgb(152, 163, 163);
+  }
+  #list_track{
+    flex-direction: column;
+    width: 250px;
+    display: flex;
+    font-size: 30px;
+  }
+  .track{
+    display: flex;
+    margin-top: 20px;
+    background-color: rgba(199, 102, 33, 0.644);
+  }
+  .play{
+    background-color: green;
+    width: 25px;
+    height: 25px;
+    margin-top: 5px;
+    margin-left: 3px;
+  }
