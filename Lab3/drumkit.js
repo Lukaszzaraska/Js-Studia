@@ -1,3 +1,5 @@
+// Podczasz odwtarzania w pętli mozliwośc włączenia jeszcze raz odtwarzania . Może wyłączyc przycisk disable jak nie to if xd
+
 const START_RECORDING_KEY = ' '
 let RECORDING_TIME_START = 0
 let RECORDING_START = false
@@ -10,15 +12,19 @@ const playAll = document.querySelector('#PlayAll')
 const PlayChecked = document.querySelector('#PlayChecked')
 const MetronomHtml = document.querySelector('#metronom')
 
+
+let Loop = false
 let Metronom_switch = 0
 let activeTrack = 0
 let activeTrackID = null
 let checkbox_list = document.querySelectorAll('.checkbox')
 let checked_track = []
-let tracker_index = 1;
+let tracker_index = 1
+let longestTimeTrack = 0
 let Track = []
 let Music = []
 var Metronom;
+var intervaRef
 const Sound = {
     boom: 'boom',
     clap: 'clap',
@@ -28,7 +34,17 @@ const Sound = {
 };
 
 
+function TrackTime(Music) {
+let tempTime = 0
+Music.forEach((track)=>{
+tempTime=track[track.length-1][0]-track[0][0]
+if(tempTime>longestTimeTrack){
+    longestTimeTrack = tempTime
+}
 
+})
+console.log(longestTimeTrack)
+}
 
 MetronomHtml.addEventListener('click', () => {
 
@@ -50,26 +66,44 @@ function StopMetronom() {
 function PlayMetronom(type) {
     const audioTag = document.querySelector('#' + type)
     audioTag.currentTime = 0
-    audioTag.
     audioTag.play()
 }
 PlayChecked.addEventListener('click', () => {
+
     checked_track.forEach((x) => {
         replay_track(x - 1)
     })
 })
 
 playAll.addEventListener('click', () => {
-    for (let index = 0; index < tracker_index - 1; index++) {
+
+    if (Loop) {
+        //  const loop = document.querySelector('#loop')
+        // console.log(loop.checked)
+        SatrtInterv()
+
+    } else {
+
+        StartAllMusic()
+
+    }
+
+})
+function SatrtInterv() {
+    intervaRef = setInterval(() => StartAllMusic(), longestTimeTrack+300)
+}
+function StopInterv() {
+    clearInterval(intervaRef)
+}
+function StartAllMusic() {
+    for (let index = 0; index < Music.length; index++) {
         replay_track(index)
     }
-})
+}
 
 document.addEventListener('click', function (e) {
     const TrackChecked = document.querySelectorAll('.content')
     if (TrackChecked.length != 0 && e.path[0].className == "content") {
-
-        //   console.log(e.target.parentNode.id)
 
         const obj = document.getElementById(`${e.target.parentNode.id}`)
 
@@ -82,25 +116,40 @@ document.addEventListener('click', function (e) {
             activeTrackID = null
             obj.style.cssText += 'background-color:rgba(199, 102, 33, 0.644)'
         }
-        // console.log(activeTrackID)
     }
 
-
-
-
     if (e.target.tagName === "BUTTON") {
-        replay_track(e.target.parentNode.id - 1)
+
+        if ((e.target.id).substring(0, 3) === "del") {
+
+            let index_del = Music.indexOf(e.target.parentNode.id)
+            let index_del_checked_track = checked_track.indexOf(e.target.parentNode.id)
+            const obj = document.getElementById(`${e.target.parentNode.id}`)
+            Music.splice(index_del, 1)
+            checked_track.splice(index_del_checked_track, 1)
+            tracker_index--
+            info.innerHTML = ""
+            obj.remove()
+        } else if ((e.target.id).substring(0, 3) === "add") {
+            replay_track(e.target.parentNode.id - 1)
+        }
+
     }
 
     if (e.target.tagName === "INPUT") {
-
-        if (checked_track.includes(e.target.parentNode.id)) {
-            let index_del = checked_track.indexOf(e.target.parentNode.id)
-            checked_track.splice(index_del, 1)
-
+        if (e.target.id === "loop") {
+            Loop = !Loop
+            StopInterv()
         } else {
-            checked_track.push(e.target.parentNode.id)
+            if (checked_track.includes(e.target.parentNode.id)) {
+                let index_del = checked_track.indexOf(e.target.parentNode.id)
+                checked_track.splice(index_del, 1)
+                console.log(checked_track)
+            } else if (!checked_track.includes(e.target.parentNode.id)) {
+                checked_track.push(e.target.parentNode.id)
+            }
         }
+
     }
 })
 
@@ -125,23 +174,25 @@ const record = (event) => {
             RECORDING_START = false
 
             if (tracker_index > 4) {
+                recorder_circle.style.cssText += 'background-color:green';
                 info.innerHTML = "Osiągnieto max ilości tracków"
                 return
             }
-            if(Track.length ==0){
+            if (Track.length == 0) {
                 return
             }
             if (activeTrackID != null) {
 
                 Music[activeTrackID - 1] = Track
+                TrackTime(Music)
                 const obj = document.getElementById(`${activeTrackID}`)
                 recorder_circle.style.cssText += 'background-color:green';
                 obj.style.cssText += 'background-color:rgba(199, 102, 33, 0.644)'
                 activeTrack = 0
                 activeTrackID = null
             } else {
-                console.log(activeTrackID)
                 Music.push(Track)
+                TrackTime(Music)
                 CreateHtml()
             }
 
@@ -205,16 +256,23 @@ function CreateHtml() {
     var button_start = document.createElement("button")
     var content = document.createElement("div")
     var checkbox = document.createElement("input")
+    var dellButton = document.createElement("button")
+    dellButton.setAttribute("class", "dellbutton")
+    dellButton.setAttribute("id", `del-${tracker_index}`)
     checkbox.setAttribute("type", "checkbox")
     checkbox.setAttribute("class", "checkbox")
     content.setAttribute("class", "content")
     button_start.setAttribute("class", "play")
+    button_start.setAttribute("id", `add-${tracker_index}`)
     button_start.innerHTML = "Play"
+    dellButton.innerHTML = "Delete"
     track_div.setAttribute("class", "track")
     track_div.setAttribute("id", `${tracker_index}`)
+
     track_div.appendChild(checkbox)
     track_div.appendChild(content)
     track_div.appendChild(button_start)
+    track_div.appendChild(dellButton)
     content.innerHTML = `Nagranie numer ${tracker_index}`
     list_track.appendChild(track_div)
     tracker_index++
