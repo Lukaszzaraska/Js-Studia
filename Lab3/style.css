@@ -37,3 +37,15 @@
     margin-top: 5px;
     margin-left: 3px;
   }
+  #info{
+    margin-top: 20px;
+    color: red;
+    font-size: 20px;
+  }
+  #PlayAll{
+    margin-top: 50px;
+    font-size: 20px;
+    width: 210px;
+    height: 30px;
+    background-color: greenyellow;
+  }
