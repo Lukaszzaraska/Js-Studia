@@ -27,12 +27,13 @@
   }
   .track{
     display: flex;
+    flex-wrap: wrap;
     margin-top: 20px;
     background-color: rgba(199, 102, 33, 0.644);
   }
   .play{
     background-color: green;
-    width: 25px;
+    width: 250px;
     height: 25px;
     margin-top: 5px;
     margin-left: 3px;
@@ -48,4 +49,21 @@
     width: 210px;
     height: 30px;
     background-color: greenyellow;
+  }
+  .checkbox{
+    width: 25px;
+    height: 25px;
+
+  }
+  #PlayChecked{
+    margin-top: 50px;
+    font-size: 20px;
+    width: 210px;
+    height: 30px;
+    background-color: rgb(43, 161, 102);
+  }
+  #metronom{
+    width: 100px;
+    height: 50px;
+    background-color: coral;
   }
