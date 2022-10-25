@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
     <title>Drumkit</title>
 </head>
+
 <body>
-    <div id="circle">SPACJA</div>
-    <div id="display">
-        <div class="key">q</div>
-        <div class="key">w</div>
-        <div class="key">e</div>
-        <div class="key">r</div>
+    <div id="main">
+        <div id="circle"></div>
+        <h2>Press Space to Start/Stop recording </h2>
+        <div id="display">
+            <div class="key" id="q">q</div>
+            <div class="key" id="w">w</div>
+            <div class="key" id="e">e</div>
+            <div class="key" id="r">r</div>
+        </div>
+
+        <div id="list_track">
+
+        </div>
+        <div id="control">
+            <div id="PlayAll">Play all</div>
+            <div id="PlayChecked">Play selected</div>
+        </div>
+        <input id="loop" type="checkbox">Loop</input>
+
+        <p id="info"></p>
+        <div id="metronom"><span id="letterFirst">M</span>etrono<span id="letterLast">M</span></div>
     </div>
-    
-    <div id="list_track">
-        
-    </div>
-    <div id="PlayAll">Odtwórz wszystko naraz</div>
-    <input id="loop" type="checkbox">Loop</div>
-    <div id="PlayChecked">Odtwórz zaznaczone</div>
-    <p id="info"></p>
-    <div id="metronom">Metronom</div>
+
 
     <audio src="./sounds/clap.wav" id="clap"></audio>
     <audio src="./sounds/boom.wav" id="boom"></audio>
@@ -30,5 +39,6 @@
     <audio src="./sounds/tom.wav" id="tom"></audio>
     <audio src="./sounds/tink.wav" id="tink"></audio>
     <script src="drumkit.js"></script>
-</body> 
+</body>
+
 </html>

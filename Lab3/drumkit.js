@@ -11,8 +11,11 @@ const info = document.querySelector('#info')
 const playAll = document.querySelector('#PlayAll')
 const PlayChecked = document.querySelector('#PlayChecked')
 const MetronomHtml = document.querySelector('#metronom')
+const letterFirst= document.querySelector('#letterFirst')
+const letterLast= document.querySelector('#letterLast')
+const tiles = document.querySelectorAll('.key')
 
-
+let metronomBool = true
 let Loop = false
 let Metronom_switch = 0
 let activeTrack = 0
@@ -57,7 +60,18 @@ MetronomHtml.addEventListener('click', () => {
     }
 })
 function StartMetronom() {
-    Metronom = setInterval(() => PlayMetronom(Sound.Metronom), 1000)
+    Metronom = setInterval(() => (PlayMetronom(Sound.Metronom),AnimationMetronom()), 1000)
+}
+function AnimationMetronom(){
+if(metronomBool){
+letterFirst.setAttribute("class","white")
+letterLast.removeAttribute("class","white")
+metronomBool=!metronomBool
+}else{
+letterLast.setAttribute("class","white")
+letterFirst.removeAttribute("class","white")
+metronomBool=!metronomBool
+}
 }
 function StopMetronom() {
     clearInterval(Metronom)
@@ -81,11 +95,8 @@ playAll.addEventListener('click', () => {
         //  const loop = document.querySelector('#loop')
         // console.log(loop.checked)
         SatrtInterv()
-
     } else {
-
         StartAllMusic()
-
     }
 
 })
@@ -175,7 +186,7 @@ const record = (event) => {
 
             if (tracker_index > 4) {
                 recorder_circle.style.cssText += 'background-color:green';
-                info.innerHTML = "Osiągnieto max ilości tracków"
+                info.innerHTML = "Max track count reached"
                 return
             }
             if (Track.length == 0) {
@@ -223,15 +234,19 @@ function onKeyPress(event) {
 function KeyChoise(key) {
     switch (key) {
         case "q":
+            animationClick(key)
             playSound(Sound.boom, key)
             break;
         case "w":
+            animationClick(key)
             playSound(Sound.clap, key)
             break;
         case "e":
+            animationClick(key)
             playSound(Sound.kick, key)
             break;
         case "r":
+            animationClick(key)
             playSound(Sound.tom, key)
             break;
 
@@ -239,7 +254,11 @@ function KeyChoise(key) {
             break;
     }
 }
+function animationClick(key){
 
+const tile = document.querySelector(`#${key}`)
+tile.style.background = '#35a7ff'
+}
 function playSound(sound, key) {
     const audioTag = document.querySelector('#' + sound)
     audioTag.currentTime = 0
@@ -249,7 +268,13 @@ function playSound(sound, key) {
         Track.push([Signature_time, key])
     }
 }
-
+document.addEventListener('keydown', () => {
+    setTimeout(() => {
+        tiles.forEach((tile) => {
+            tile.style.background = 'rgb(241, 206, 230)'
+        })
+    }, 40)
+})
 function CreateHtml() {
     recorder_circle.style.cssText += 'background-color:green';
     var track_div = document.createElement("div")
@@ -273,7 +298,7 @@ function CreateHtml() {
     track_div.appendChild(content)
     track_div.appendChild(button_start)
     track_div.appendChild(dellButton)
-    content.innerHTML = `Nagranie numer ${tracker_index}`
+    content.innerHTML = `Track number ${tracker_index}`
     list_track.appendChild(track_div)
     tracker_index++
 }
