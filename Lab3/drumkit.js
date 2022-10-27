@@ -236,18 +236,22 @@ function KeyChoise(key) {
         case "q":
             animationClick(key)
             playSound(Sound.boom, key)
+            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'q'}));
             break;
         case "w":
             animationClick(key)
             playSound(Sound.clap, key)
+            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'w'}));
             break;
         case "e":
             animationClick(key)
             playSound(Sound.kick, key)
+            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'e'}));
             break;
         case "r":
             animationClick(key)
             playSound(Sound.tom, key)
+            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'r'}));
             break;
 
         default:
