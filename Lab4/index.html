@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Lab4/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <title>NotePocket</title>
+</head>
+
+<body>
+    <div id="main">
+        <button id="reset" style="color:black;"> reset</button>
+        <div id="logo"><span class="bold">You Shall Not Pass</span><br> without a new note </div>
+        <input id="search" placeholder="Enter what you are looking for" />
+        <div id="NotificationList">
+            <div id="headingNotification">
+                <span id="row-1">
+                    <span id="row-1-1"><i class="material-icons icon">chat_bubble_outline</i></span>
+                    <span id="row-1-2">Notifications</span>
+                </span>
+                <span id="row-2">
+                    <button id="openNewNotification">
+                        <span class=" material-symbols-outlined " style=" margin-right: 5px;">
+                            Add
+                        </span>
+                        Add
+                    </button>
+                </span>
+            </div>
+            <div id="headingNewNotification">
+                <span id="row-1">
+                    <span id="row-1-1"><i class="material-symbols-outlined icon">add_alert</i></span>
+                    <span id="row-1-2">Create New Notifications</span>
+                </span>
+                <span id="row-2">
+                    <button id="undo">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            undo
+                        </span>
+                        Back
+                    </button>
+                </span>
+            </div>
+            <div class="content">
+                <div id="contentNotification">
+
+                </div>
+                <div id="contentNewNotification">
+
+                </div>
+            </div>
+        </div>
+<!------------------------------------------------------------------>
+        <div id="noteList">
+            <div id="headingNote">
+                <span id="row-1">
+                    <span id="row-1-1"><i class="material-icons icon">chat_bubble_outline</i></span>
+                    <span id="row-1-2">Note</span>
+                </span>
+                <span id="row-2">
+                    <button id="openNewNote">
+                        <span class=" material-symbols-outlined " style=" margin-right: 5px;">
+                            Add
+                        </span>
+                        Add
+                    </button>
+                </span>
+            </div>
+            <!-------------------->
+            <div id="headingNewNote">
+                <span id="row-1">
+                    <span id="row-1-1"><i class="material-symbols-outlined icon">note</i></span>
+                    <span id="row-1-2">Create New Note</span>
+                </span>
+                <span id="row-2">
+                    <button id="createNewNote">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            note_add
+                        </span>
+                        Create
+                    </button>
+                    <button id="undo_note">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            undo
+                        </span>
+                        Back
+                    </button>
+                </span>
+            </div>
+            <!-------------------->
+            <div id="headingEditNote">
+                <span id="row-1">
+                    <span id="row-1-1"><i class="material-symbols-outlined icon">edit</i></span>
+                    <span id="row-1-2">Editing</span>
+                </span>
+                <span id="row-2">
+                    <button id="SendEdit">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            check
+                        </span>
+                        Confirm
+                    </button>
+                    <button id="undo_note_fromEdit">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            undo
+                        </span>
+                        Back
+                    </button>
+                   
+                </span>
+            </div>
+             <!------------------------------------>
+            <div class="content">
+                <div id="contentNote">
+                    <div id="templatesNote" style="display:none;">
+
+                    </div>
+                </div>
+                 <!-------------------->
+                <div id="contentNewNote">
+                    <span id="row-1" >     
+                        <input type="text" aria-placeholder="blue" maxlength="25" id="Title" placeholder="Title" required>
+
+                        <select id="Colors" list="Colors">
+                            <option selected="selected" value="white">white</option>
+                            <option value="blue">blue</option>
+                            <option value="red">red</option>
+                            <option value="green">green</option>
+                        </select>
+                    </span>
+                    <textarea id="BodyNewNote" placeholder="Content" required></textarea>
+                </div>
+                 <!-------------------->
+                 <div id="contentEditNote">
+                    <span id="row-1" class="cssEdit">
+                        <input type="text" aria-placeholder="blue" maxlength="25" disabled id="EditTitle" placeholder="Title" required>
+
+                        <select id="EditColors" list="Colors">
+                            <option selected="selected" value="white">white</option>
+                            <option value="blue">blue</option>
+                            <option value="red">red</option>
+                            <option value="green">green</option>
+                        </select>
+                    </span>
+                    <textarea id="BodyEditNote" placeholder="Content" required></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="Display.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>

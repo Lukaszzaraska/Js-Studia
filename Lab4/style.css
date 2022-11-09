@@ -1,0 +1,347 @@
+body{
+  cursor:default;
+}
+#main {
+  width: 1080px;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#search {
+  width: 98%;
+  height: 50px;
+  display: flex;
+  background-color: #40454B;
+  color: #9C9DA1;
+  font-size: 24px;
+  border-radius: 2px;
+  background-image: url('https://www.freeiconspng.com/uploads/search-icon-png-2.png');
+  background-size: 30px;
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  padding-left: 50px;
+  margin-bottom: 50px;
+}
+
+#logo {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  font-size: 30px;
+  justify-content: center;
+  display: flex;
+}
+
+.bold {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 40px;
+}
+
+#NotificationList {
+  background-color: #40454B;
+  display: flex;
+  width: 80%;
+  min-height: 300px;
+  max-height: 500px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+#noteList {
+  flex-wrap: wrap;
+  background-color: #40454B;
+  display: flex;
+  width: 80%;
+  height: 400px;
+  overflow: hidden;
+}
+
+#headingNotification {
+  background-color: rgba(76, 82, 88, 0.588);
+  color: white;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 30px;
+  display: flex;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+}
+
+#headingNote {
+  background-color: rgba(76, 82, 88, 0.588);
+  color: white;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 30px;
+  display: flex;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+}
+
+#headingNewNote {
+  display: none;
+  background-color: rgba(76, 82, 88, 0.588);
+  color: white;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 30px;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+}
+
+#contentNote {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  justify-content: flex-start;
+
+}
+
+#contentNewNote {
+  display: none;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+
+#row-1 {
+  display: flex;
+  justify-content: space-around;
+}
+
+#row-1-1 {
+  padding-right: 20px;
+}
+
+#row-2 {
+  padding-right: 20px;
+  display: flex;
+  padding-bottom: 10px;
+}
+
+.icon {
+  font-size: 33px !important;
+}
+
+button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 15px;
+  color: white;
+  background-color: transparent;
+  border-width: 2px;
+  border-style: solid;
+  border-image: linear-gradient(to right, rgb(139, 0, 76), rgb(133, 27, 185)) 1;
+  border-radius: 3px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+#headingNewNotification {
+  display: none;
+  background-color: rgba(76, 82, 88, 0.588);
+  color: white;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 30px;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+}
+
+.content {
+  height: 320px;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+#contentNotification {
+  display: flex;
+  height: 80%;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+#contentNewNotification {
+  display: none;
+  height: 80%;
+  width: 100%;
+}
+
+
+
+#Title::placeholder,
+#BodyNewNote::placeholder {
+  letter-spacing: 3px;
+  color: white;
+}
+
+#Title,#EditTitle {
+  border-radius: 2px;
+  font-size: 22px;
+  padding: 3px;
+  width: 70%;
+  background-color: rgb(120, 125, 131);
+  margin: 5px;
+  height: 30px;
+  color: white;
+  padding-left: 10px;
+  border: none;
+}
+
+#Colors,#EditColors {
+  border-radius: 2px;
+  padding: 3px;
+  margin: 5px;
+  width: 25%;
+  height: 35px;
+  background-color: rgb(120, 125, 131);
+  font-size: 23px;
+  color: white;
+}
+
+#BodyNewNote,#BodyEditNote {
+  border-radius: 2px;
+  padding: 10px;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  height: 70%;
+  margin: 0 auto;
+  width: 96%;
+  background-color: rgb(120, 125, 131);
+  resize: none;
+}
+
+#createNewNote {
+  margin-right: 10px;
+}
+
+
+/* ------------------------------------------------------------------------- */
+.templatesNote {
+  margin-top: 10px;
+  width: 98%;
+  height: 50px;
+  background-color: #73787e;
+  display: flex;
+  border-color: white;
+  border-width: 2px;
+  border-style: solid;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.TitleNote {
+  margin-left: 5px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+body::-webkit-scrollbar,
+.content::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+body::-webkit-scrollbar-track,
+.content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb,
+.content::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+.deleteBtn {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(65, 62, 62);
+  padding: 5px;
+  margin-right: 10px;
+}
+#SendEdit{
+  margin-right: 10px;
+}
+.editBtn {
+  font-size: 30px !important;
+  width: 60px;
+  height: 40px;
+  background-color: rgb(65, 62, 62);
+  padding: 1px 5px;
+  margin-right: 10px;
+}
+
+.OptionsNote {
+  display: flex;
+}
+.PinNote{
+  display: flex;
+}
+.PinImg{
+  position: relative;
+  bottom: 21px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  background-size: 30px;
+  background-image: url(/Lab4/pin.png);
+  transform: rotate(-80deg);
+}
+.PinnedImg{
+  position: relative;
+  bottom: 21px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  background-size: 30px;
+  background-image: url(/Lab4/pinned.png);
+  transform: rotate(-80deg);
+}
+.PinImg:hover{
+  background-image: url(/Lab4/pinned.png);
+}
+.PinnedImg:hover{
+  background-image: url(/Lab4/pin.png);
+}
+
+
+#headingEditNote{
+  display: none;
+  background-color: rgba(76, 82, 88, 0.588);
+  color: white;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 30px;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+}
+#contentEditNote{
+  display: none;
+  border-radius: 2px;
+  padding: 10px;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  height: 90%;
+  margin: 0 auto;
+  width: 96%;
+  resize: none;
+  flex-wrap: wrap;
+}
+.cssEdit{
+  width: 100%;
+}
