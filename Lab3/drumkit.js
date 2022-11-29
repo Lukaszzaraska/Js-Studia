@@ -11,8 +11,8 @@ const info = document.querySelector('#info')
 const playAll = document.querySelector('#PlayAll')
 const PlayChecked = document.querySelector('#PlayChecked')
 const MetronomHtml = document.querySelector('#metronom')
-const letterFirst= document.querySelector('#letterFirst')
-const letterLast= document.querySelector('#letterLast')
+const letterFirst = document.querySelector('#letterFirst')
+const letterLast = document.querySelector('#letterLast')
 const tiles = document.querySelectorAll('.key')
 
 let metronomBool = true
@@ -36,17 +36,26 @@ const Sound = {
     Metronom: 'tink'
 };
 
+document.onkeydown = checkKey;
 
-function TrackTime(Music) {
-let tempTime = 0
-Music.forEach((track)=>{
-tempTime=track[track.length-1][0]-track[0][0]
-if(tempTime>longestTimeTrack){
-    longestTimeTrack = tempTime
+function checkKey(e) {
+
+    e = e || window.event;
+
+    KeyChoise(e.keyCode.toString())
+  
+
 }
+function TrackTime(Music) {
+    let tempTime = 0
+    Music.forEach((track) => {
+        tempTime = track[track.length - 1][0] - track[0][0]
+        if (tempTime > longestTimeTrack) {
+            longestTimeTrack = tempTime
+        }
 
-})
-console.log(longestTimeTrack)
+    })
+    console.log(longestTimeTrack)
 }
 
 MetronomHtml.addEventListener('click', () => {
@@ -60,18 +69,18 @@ MetronomHtml.addEventListener('click', () => {
     }
 })
 function StartMetronom() {
-    Metronom = setInterval(() => (PlayMetronom(Sound.Metronom),AnimationMetronom()), 1000)
+    Metronom = setInterval(() => (PlayMetronom(Sound.Metronom), AnimationMetronom()), 1000)
 }
-function AnimationMetronom(){
-if(metronomBool){
-letterFirst.setAttribute("class","white")
-letterLast.removeAttribute("class","white")
-metronomBool=!metronomBool
-}else{
-letterLast.setAttribute("class","white")
-letterFirst.removeAttribute("class","white")
-metronomBool=!metronomBool
-}
+function AnimationMetronom() {
+    if (metronomBool) {
+        letterFirst.setAttribute("class", "white")
+        letterLast.removeAttribute("class", "white")
+        metronomBool = !metronomBool
+    } else {
+        letterLast.setAttribute("class", "white")
+        letterFirst.removeAttribute("class", "white")
+        metronomBool = !metronomBool
+    }
 }
 function StopMetronom() {
     clearInterval(Metronom)
@@ -101,7 +110,7 @@ playAll.addEventListener('click', () => {
 
 })
 function SatrtInterv() {
-    intervaRef = setInterval(() => StartAllMusic(), longestTimeTrack+300)
+    intervaRef = setInterval(() => StartAllMusic(), longestTimeTrack + 300)
 }
 function StopInterv() {
     clearInterval(intervaRef)
@@ -218,7 +227,8 @@ const record = (event) => {
 
     }
 }
-document.addEventListener('keypress', record)
+document.addEventListener('keydown', record)
+
 function onKeyPress(event) {
 
     if (event.key === START_RECORDING_KEY) {
@@ -233,35 +243,54 @@ function onKeyPress(event) {
 
 function KeyChoise(key) {
     switch (key) {
-        case "q":
-            animationClick(key)
+        // case "q":
+        //     animationClick(key)
+        //     playSound(Sound.boom, key)
+        //     document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'q' }));
+        //     break;
+        case "38":
+            animationClick("q"+key)
             playSound(Sound.boom, key)
-            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'q'}));
+            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'q' }));
             break;
-        case "w":
-            animationClick(key)
+        // case "w":
+        //     animationClick(key)
+        //     playSound(Sound.clap, key)
+        //     document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'w' }));
+        //     break;
+        case "39":
+            animationClick("q"+key)
             playSound(Sound.clap, key)
-            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'w'}));
+            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'q' }));
             break;
-        case "e":
-            animationClick(key)
+        // case "e":
+        //     animationClick(key)
+        //     playSound(Sound.kick, key)
+        //     document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'e' }));
+        //     break;
+        case "40":
+            animationClick("q"+key)
             playSound(Sound.kick, key)
-            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'e'}));
+            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'q' }));
             break;
-        case "r":
-            animationClick(key)
+        // case "r":
+        //     animationClick(key)
+        //     playSound(Sound.tom, key)
+        //     document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'r' }));
+        //     break;
+        case "37":
+            animationClick("q"+key)
             playSound(Sound.tom, key)
-            document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'r'}));
+            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'q' }));
             break;
 
         default:
             break;
     }
 }
-function animationClick(key){
-
-const tile = document.querySelector(`#${key}`)
-tile.style.background = '#35a7ff'
+function animationClick(key) {
+    const tile = document.querySelector(`#${key}`)
+    tile.style.background = '#35a7ff'
 }
 function playSound(sound, key) {
     const audioTag = document.querySelector('#' + sound)

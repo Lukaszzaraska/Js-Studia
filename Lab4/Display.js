@@ -13,16 +13,16 @@ const HeadersEditNote = document.querySelector('#headingEditNote')
 const ContentEditNote = document.querySelector('#contentEditNote')
 
 export function displayNotification() {
-    Notification.style.display = "none"
-    NotificationList.style.display = "none"
-    FormsNewNotification.style.display = "flex"
-    ContentNewNotification.style.display = "flex"
-}
-export function displayNewNotification() {
     Notification.style.display = "flex"
     NotificationList.style.display = "flex"
     FormsNewNotification.style.display = "none"
     ContentNewNotification.style.display = "none"
+}
+export function displayNewNotification() {
+    Notification.style.display = "none"
+    NotificationList.style.display = "none"
+    FormsNewNotification.style.display = "flex"
+    ContentNewNotification.style.display = "flex"
 }
 export function displayNote() {
     HeadersNotesList.style.display = "flex"

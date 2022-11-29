@@ -1,6 +1,7 @@
-body{
-  cursor:default;
+body {
+  cursor: default;
 }
+
 #main {
   width: 1080px;
   display: flex;
@@ -97,10 +98,9 @@ body{
   justify-content: space-between;
 }
 
-#contentNote {
+#contentNote,#contentSearch,#contentNotification {
   display: flex;
   flex-direction: column;
-
   width: 100%;
   justify-content: space-evenly;
   align-items: center;
@@ -108,7 +108,7 @@ body{
 
 }
 
-#contentNewNote {
+#contentNewNote,#contentNewNotification {
   display: none;
   height: 100%;
   width: 100%;
@@ -168,12 +168,7 @@ button {
   overflow-y: scroll;
 }
 
-#contentNotification {
-  display: flex;
-  height: 80%;
-  width: 100%;
-  justify-content: space-evenly;
-}
+
 
 #contentNewNotification {
   display: none;
@@ -189,7 +184,8 @@ button {
   color: white;
 }
 
-#Title,#EditTitle {
+#Title,
+#EditTitle {
   border-radius: 2px;
   font-size: 22px;
   padding: 3px;
@@ -202,7 +198,8 @@ button {
   border: none;
 }
 
-#Colors,#EditColors {
+#Colors,
+#EditColors {
   border-radius: 2px;
   padding: 3px;
   margin: 5px;
@@ -213,25 +210,26 @@ button {
   color: white;
 }
 
-#BodyNewNote,#BodyEditNote {
+#BodyNewNote,
+#BodyEditNote {
   border-radius: 2px;
   padding: 10px;
   font-size: 20px;
   color: rgb(255, 255, 255);
-  height: 70%;
+  height: 60%;
   margin: 0 auto;
   width: 96%;
   background-color: rgb(120, 125, 131);
   resize: none;
 }
 
-#createNewNote {
+#createNewNote,#createNewNotification {
   margin-right: 10px;
 }
 
 
 /* ------------------------------------------------------------------------- */
-.templatesNote {
+.templatesNote,.templatesNotification {
   margin-top: 10px;
   width: 98%;
   height: 50px;
@@ -244,7 +242,7 @@ button {
   justify-content: space-between;
 }
 
-.TitleNote {
+.TitleNote,.titleNotification {
   margin-left: 5px;
   font-size: 25px;
   font-weight: bold;
@@ -273,9 +271,11 @@ body::-webkit-scrollbar-thumb,
   padding: 5px;
   margin-right: 10px;
 }
-#SendEdit{
+
+#SendEdit {
   margin-right: 10px;
 }
+
 .editBtn {
   font-size: 30px !important;
   width: 60px;
@@ -288,38 +288,38 @@ body::-webkit-scrollbar-thumb,
 .OptionsNote {
   display: flex;
 }
-.PinNote{
+
+.PinNote {
+  margin-left: 15px;
   display: flex;
 }
-.PinImg{
-  position: relative;
-  bottom: 21px;
-  right: 5px;
+
+.PinImg {
   width: 30px;
   height: 30px;
   background-size: 30px;
-  background-image: url(/Lab4/pin.png);
+  background-image: url(/Lab4/star.png);
   transform: rotate(-80deg);
 }
-.PinnedImg{
-  position: relative;
-  bottom: 21px;
-  right: 5px;
+
+.PinnedImg {
   width: 30px;
   height: 30px;
   background-size: 30px;
-  background-image: url(/Lab4/pinned.png);
+  background-image: url(/Lab4/starred.png);
   transform: rotate(-80deg);
 }
-.PinImg:hover{
-  background-image: url(/Lab4/pinned.png);
+
+.PinImg:hover {
+  background-image: url(/Lab4/starred.png);
 }
-.PinnedImg:hover{
-  background-image: url(/Lab4/pin.png);
+
+.PinnedImg:hover {
+  background-image: url(/Lab4/star.png);
 }
 
 
-#headingEditNote{
+#headingEditNote {
   display: none;
   background-color: rgba(76, 82, 88, 0.588);
   color: white;
@@ -330,7 +330,8 @@ body::-webkit-scrollbar-thumb,
   height: 50px;
   justify-content: space-between;
 }
-#contentEditNote{
+
+#contentEditNote {
   display: none;
   border-radius: 2px;
   padding: 10px;
@@ -342,6 +343,139 @@ body::-webkit-scrollbar-thumb,
   resize: none;
   flex-wrap: wrap;
 }
-.cssEdit{
+
+#headingEditNote::placeholder,
+#BodyEditNote::placeholder {
+  letter-spacing: 3px;
+  color: white;
+}
+
+.cssEdit {
   width: 100%;
+}
+
+.dot {
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-left: 10px;
+  height: 18px;
+  width: 18px;
+  background-color: #bbb;
+  border-radius: 50%;
+}
+
+#lightBox,#lightBoxSearch {
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  position: fixed;
+  display: none;
+  width: 1000px;
+  height: 700px;
+  background-color: rgb(76, 82, 88);
+  z-index: 2;
+}
+
+#ContentLightBox,#ContentLightBoxSearch {
+  padding: 10px;
+  color: white;
+  font-size: 40px;
+  margin-left: 2%;
+  margin-right: 2%;
+  height: 590px;
+  display: flex;
+  background-color: rgba(110, 116, 122, 0.588);
+}
+
+#HeadingLightBox,#HeadingLightBoxSearch {
+  display: flex;
+  justify-content: space-around;
+}
+
+#titleLightBox,#titleLightBoxSearch {
+  border-radius: 2px;
+  font-size: 40px;
+  padding: 3px;
+  width: 70%;
+  background-color: rgb(120, 125, 131);
+  margin: 10px;
+  height: 50px;
+  color: white;
+  padding-left: 10px;
+  border: none;
+}
+
+#colorLightBox,#colorLightBoxSearch {
+  border-radius: 2px;
+  font-size: 40px;
+  padding: 3px;
+  width: 30%;
+  background-color: rgb(120, 125, 131);
+  margin: 10px;
+  height: 50px;
+  color: white;
+  padding-left: 10px;
+  border: none;
+}
+.date{
+  margin-right: 15px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+#NewTag{
+height: 60px;
+margin: 8px;
+background-color: rgb(120, 125, 131);
+padding-left: 10px;
+border: none;
+color: white;
+font-size: 25px;
+}
+#NewTag::placeholder{
+  color: white;
+  font-size: 25px;
+  }
+.RdyTag{
+  width: 110px;
+  margin: 8px;
+  background-color: #8d7e7e;
+  height: 60px;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+}
+#TagList{
+  display: flex;
+}
+.DelTag{
+  position: absolute;
+  bottom: 35px;
+  left: 85px;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+}
+.destination{
+  width: 180px;
+  background-color: rgb(207, 125, 31);
+  height: 30px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+.DataPicker{
+  margin: 5px;
+  height: 100px;
+  font-size: 80px;
+  background-color: #73787e;
+}
+#NotesList{
+  background-color: #858a91;
+  margin: 5px;
+  font-size: 60px;
+  height: 80px;
+  width: 40%;
+  text-align: center;
 }

@@ -12,15 +12,60 @@
     <title>NotePocket</title>
 </head>
 
-<body>
+<body class="body">
+    <script type="module" src="/Lab4/UpJs.js"></script>
+    <script>
+        function ReplaceCharacter(event) {
+            var maxTag = 0
+            const InputTag = document.querySelector("#NewTag")
+            if (maxTag < 4) {
+                const List = document.querySelector("#TagList")
+                const RdyTag = document.createElement('div')
+                RdyTag.setAttribute("class", "RdyTag")
+                if (event.key === " ") {
+                    maxTag++
+                    var changed = NewTag.value.replaceAll("#", "_")
+                    var change = changed.replaceAll(" ", "_")
+                    var trimLastChar = change.slice(0, -1)
+                    RdyTag.innerHTML = "#" + trimLastChar
+                    RdyTag.setAttribute("id", `${trimLastChar}`)
+                    List.appendChild(RdyTag)
+                    InputTag.value = '';
+                }
+            } else {
+                InputTag.style.border = "red";
+            }
+        }
+    </script>
+    <div id="lightBox">
+        <div id="HeadingLightBox">
+            <div id="titleLightBox">
+
+            </div>
+            <div id="colorLightBox"></div>
+        </div>
+        <div id="ContentLightBox">
+
+        </div>
+    </div>
+
+    <div id="lightBoxSearch">
+        <div id="contentSearch">
+            <div id="templatesSearch" style="display:none;">
+
+            </div>
+        </div>
+    </div>
     <div id="main">
+
         <button id="reset" style="color:black;"> reset</button>
         <div id="logo"><span class="bold">You Shall Not Pass</span><br> without a new note </div>
         <input id="search" placeholder="Enter what you are looking for" />
+
         <div id="NotificationList">
             <div id="headingNotification">
                 <span id="row-1">
-                    <span id="row-1-1"><i class="material-icons icon">chat_bubble_outline</i></span>
+                    <span id="row-1-1"><i class="material-icons icon">notifications</i></span>
                     <span id="row-1-2">Notifications</span>
                 </span>
                 <span id="row-2">
@@ -38,24 +83,36 @@
                     <span id="row-1-2">Create New Notifications</span>
                 </span>
                 <span id="row-2">
+                    <button id="createNewNotification">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            check
+                        </span>
+                        Create
+                    </button>
                     <button id="undo">
                         <span class="material-symbols-outlined" style="margin-right: 5px;">
                             undo
                         </span>
                         Back
                     </button>
+
                 </span>
             </div>
             <div class="content">
                 <div id="contentNotification">
-
+                
                 </div>
                 <div id="contentNewNotification">
+
+                    <input id="Data" class="DataPicker" type="datetime-local" value="2022-11-01" min="2022-01-01" max="2030-12-31" />
+                    <select id="NotesList" list="Notes">
+                    </select>
+
 
                 </div>
             </div>
         </div>
-<!------------------------------------------------------------------>
+        <!------------------------------------------------------------------>
         <div id="noteList">
             <div id="headingNote">
                 <span id="row-1">
@@ -111,20 +168,21 @@
                         </span>
                         Back
                     </button>
-                   
+
                 </span>
             </div>
-             <!------------------------------------>
+            <!------------------------------------>
             <div class="content">
                 <div id="contentNote">
                     <div id="templatesNote" style="display:none;">
 
                     </div>
                 </div>
-                 <!-------------------->
+                <!-------------------->
                 <div id="contentNewNote">
-                    <span id="row-1" >     
-                        <input type="text" aria-placeholder="blue" maxlength="25" id="Title" placeholder="Title" required>
+                    <span id="row-1">
+                        <input type="text" aria-placeholder="blue" maxlength="25" id="Title" placeholder="Title"
+                            required>
 
                         <select id="Colors" list="Colors">
                             <option selected="selected" value="white">white</option>
@@ -134,11 +192,16 @@
                         </select>
                     </span>
                     <textarea id="BodyNewNote" placeholder="Content" required></textarea>
+                    <div id="TagList">
+                        <input id="NewTag" onkeyup="ReplaceCharacter(event)" placeholder="#Tag"></input>
+                    </div>
+
                 </div>
-                 <!-------------------->
-                 <div id="contentEditNote">
+                <!-------------------->
+                <div id="contentEditNote">
                     <span id="row-1" class="cssEdit">
-                        <input type="text" aria-placeholder="blue" maxlength="25" disabled id="EditTitle" placeholder="Title" required>
+                        <input type="text" aria-placeholder="blue" maxlength="25" disabled id="EditTitle"
+                            placeholder="Title" required>
 
                         <select id="EditColors" list="Colors">
                             <option selected="selected" value="white">white</option>
