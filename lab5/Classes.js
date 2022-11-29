@@ -1,11 +1,10 @@
-import { map } from "./Functions.js"
+import { getRandomArbitrary,map } from "./Functions.js"
 
 export class DevicePosition {
     constructor(Alfa = 0, Beta = 0, Gamma = 0) {
         this.Alfa = Alfa
         this.Beta = Beta
         this.Gamma = Gamma
-
     }
     UpdatePosition(Alfa, Beta, Gamma) {
         this.Alfa = Alfa
@@ -22,7 +21,6 @@ export class Ball {
     ChangePosition(PosX, PosY) {
         this.PositionX = PosX
         this.PositionY = PosY
-
     }
 }
 
@@ -62,8 +60,13 @@ export class Time {
             this.s += Math.floor(this.ms/1000)
             this.ms=0
         }
-        
-        
     }
-
+}
+export class Hole {
+    constructor(){
+        //size = r
+        this.size = getRandomArbitrary(27,50)
+        this.PositionY = getRandomArbitrary(50+(this.size*2),window.innerHeight-50-(this.size*2))
+        this.PositionX = getRandomArbitrary(50+(this.size*2),window.innerWidth-50-(this.size*2))
+    }
 }

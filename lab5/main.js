@@ -1,9 +1,12 @@
-
 import { DevicePosition, Ball, Vector, Time } from "./Classes.js"
+import { GenerateHoles} from "./Functions.js"
+
 const ball = document.querySelector("#ball")
 const field = document.querySelector("#field")
 const start_btn = document.querySelector("#start_btn")
 const TimerHtml = document.querySelector("#Timer")
+const menu = document.querySelector("#menu")
+const SingleBallSingleHole = document.querySelector("#SingleBallSingleHole")
 let time = new Time()
 
 
@@ -11,7 +14,7 @@ let devicePosition = new DevicePosition()
 let vector = new Vector(devicePosition.Beta, devicePosition.Gamma)
 let Player = new Ball(vector.PositionY, vector.PositionX)
 
-const interval =()=> {setInterval(Timer, 10)}
+const interval = () => { setInterval(Timer, 10) }
 
 function Timer() {
   time.Change(10)
@@ -35,11 +38,19 @@ function animate() {
   requestAnimationFrame(animate)
 }
 
-const start = () => {
+const openMenu = () => {
   start_btn.style.display = 'none'
-  TimerHtml.style.display = 'block'
-  field.style.display = 'block'
-  interval()
-  requestAnimationFrame(animate)
+  menu.style.display = 'flex'
+
 }
-start_btn.addEventListener('mousedown', start)
+
+const SBSH = () => {
+  menu.style.display = 'none'
+  field.style.display = 'block'
+  TimerHtml.style.display = 'block'
+  GenerateHoles(1)
+  interval()
+ requestAnimationFrame(animate)
+}
+start_btn.addEventListener('mousedown', openMenu)
+SingleBallSingleHole.addEventListener('mousedown',SBSH)
