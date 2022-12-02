@@ -67,3 +67,18 @@ z-index: 2;
     border-radius: 100%;
     border-width:2px;
 }
+.holeHelper{
+    z-index: 1;
+    position: relative;
+    background-color: rgb(255, 0, 0);
+    border-radius: 100%;
+    border-width:2px;
+}
+#BallHelper{
+    position: relative;
+    left: 50%;
+    top:50%;
+    width: 1px;
+    height: 1px;
+    
+}

@@ -15,6 +15,7 @@ export class DevicePosition {
 
 export class Ball {
     constructor(PositionX, PositionY) {
+        this.size = 25
         this.PositionX = PositionX
         this.PositionY = PositionY
     }
@@ -68,5 +69,6 @@ export class Hole {
         this.size = getRandomArbitrary(27,50)
         this.PositionY = getRandomArbitrary(50+(this.size*2),window.innerHeight-50-(this.size*2))
         this.PositionX = getRandomArbitrary(50+(this.size*2),window.innerWidth-50-(this.size*2))
+        this.centralPoint = {X:this.PositionX+this.size,Y:this.PositionY+this.size}
     }
 }

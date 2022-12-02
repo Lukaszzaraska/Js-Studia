@@ -1,0 +1,22 @@
+#StartBtn,#ResetBtn{
+    width: 70px;
+    height: 40px;
+    background-color: rgb(94, 97, 94);
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 5px;
+}
+canvas {
+    border: 1px solid black;
+    position: absolute;
+  }
+  #info{
+display: flex;
+margin: 5px;
+  }
+  #range{
+    margin-left: 10px;
+    display: flex;
+  }
