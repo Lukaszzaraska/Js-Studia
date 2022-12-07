@@ -1,0 +1,62 @@
+	/* Create a basic game in CSS */
+	body {
+		background-color: #e3e3e3;
+	}
+
+	#game {
+		width: 500px;
+		height: 500px;
+		margin: 0 auto;
+		background-color: #fff;
+		position: relative;
+		border-radius: 5px;
+		box-shadow: 0 0 10px #333;
+	}
+
+	#player {
+		width: 40px;
+		height: 40px;
+		background-color: #ff0000;
+		position: absolute;
+		top: 0;
+		left: 0;
+		border-radius: 5px;
+	}
+
+	#enemy {
+		width: 40px;
+		height: 40px;
+		background-color: #0000ff;
+		position: absolute;
+		top: 0;
+		right: 0;
+		border-radius: 5px;
+	}
+
+	#goal {
+		width: 40px;
+		height: 40px;
+		background-color: #00ff00;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		border-radius: 5px;
+	}
+
+	#obstacle {
+		width: 40px;
+		height: 80px;
+		background-color: #333333;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		border-radius: 5px;
+	}
+
+	#score {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		color: #333;
+		font-size: 24px;
+	}

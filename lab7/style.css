@@ -1,3 +1,8 @@
+body{
+
+  width: 90%;
+  height: 100%;
+}
 #StartBtn,#ResetBtn{
     width: 70px;
     height: 40px;
@@ -11,12 +16,13 @@
 canvas {
     border: 1px solid black;
     position: absolute;
+    cursor: crosshair;
   }
   #info{
 display: flex;
 margin: 5px;
   }
-  #range{
+  #range,#size{
     margin-left: 10px;
     display: flex;
   }
