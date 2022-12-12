@@ -1,10 +1,10 @@
 
-import { dist, getCursorPosition, CreateCanva, map } from "./func.js"
+import { dist, getCursorPosition, CreateCanva, map ,getRandom} from "./func.js"
 import { Circle, Cursor } from "./Class.js"
 
 let sizeLinkBall = document.querySelector('[name="sizeLinkBall"]').value
 
-export const CanvaH = Math.round(window.innerHeight - 100)
+export const CanvaH = Math.round(window.innerHeight - 200)
 export const CanvaW = Math.round(window.innerWidth - 100)
 CreateCanva();
 let canva = document.querySelector("#myCanvas");
@@ -42,11 +42,13 @@ ResetBtn.addEventListener("click", () => {
 
 })
 StartBtn.addEventListener("click", () => {
-    CursorPower = document.querySelector('[name="CursorPower"]').value
-    cursor.radius = CursorPower
-    value = document.querySelector('[name="ballsNumber"]').value
-    sizeLinkBall = document.querySelector('[name="sizeLinkBall"]').value
+    CursorPower = document.querySelector('[name="CursorPower"]').value;
+    cursor.radius = CursorPower;
+    value = document.querySelector('[name="ballsNumber"]').value;
+    sizeLinkBall = document.querySelector('[name="sizeLinkBall"]').value;
     for (let index = 0; index < value; index++) {
+      
+       
         CircleTab.push(new Circle(sizeLinkBall))
     }
 
@@ -60,8 +62,10 @@ let animate = () => {
     ctx.fill();
     ctx.stroke();
 
-    CircleTab.forEach(myCircle => {
-
+    CircleTab.forEach((myCircle,i) => {
+        if(myCircle.radius<2){
+            CircleTab.splice(i, 1);
+        }
         myCircle.Update(myCircle.x, myCircle.y)
 
         const HelpTab = CircleTab.filter(Circle => dist(myCircle.x, Circle.x, myCircle.y, Circle.y) < myCircle.RadiusLineDraw + Circle.radius)
@@ -71,13 +75,20 @@ let animate = () => {
                 let distance = Math.round(dist(myCircle.x, Circle.x, myCircle.y, Circle.y))
 
                 const Color = map(distance, 1, myCircle.RadiusLineDraw, 0, myCircle.RadiusLineDraw * 0.2, false)
-                const Size = map(distance, 1, myCircle.RadiusLineDraw, 1, 0.1, false)
-
+                const Size = map(distance, 1, myCircle.RadiusLineDraw, 2, 0.1, false)
+                Circle.massReplacement(myCircle)
                 ctx.beginPath();
-                ctx.strokeStyle = `rgb(${Color},0,0)`;
+               // ctx.strokeStyle = `rgb(${Color},0,0)`;
+               if(Circle.kineticForce>myCircle.kineticForce){
+                ctx.strokeStyle = myCircle.color;
+               }else{
+                ctx.strokeStyle = Circle.color;
+               }
+               
                 ctx.lineWidth = Size;
                 ctx.moveTo(myCircle.x, myCircle.y);
                 ctx.lineTo(Circle.x, Circle.y);
+           
                 ctx.stroke()
             }
         })
@@ -90,7 +101,7 @@ let animate = () => {
     // setTimeout(() => {
     //     requestAnimationFrame(animate)
     // }, 10)
-    animation = requestAnimationFrame(animate)
+   animation = requestAnimationFrame(animate)
 }
 
 

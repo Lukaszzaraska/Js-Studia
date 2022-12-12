@@ -1,5 +1,4 @@
 body{
-
   width: 90%;
   height: 100%;
 }
@@ -25,4 +24,26 @@ margin: 5px;
   #range,#size{
     margin-left: 10px;
     display: flex;
+  }
+  datalist {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    writing-mode: vertical-lr;
+    width: 200px;
+  }
+  
+  option {
+    padding: 0;
+  }
+  
+  input[type="range"] {
+    width: 200px;
+    margin: 0;
+  }
+  .wrapper{
+    display: flex;
+    padding-left: 20px;
+    flex-direction: column;
+    text-align: center;
   }

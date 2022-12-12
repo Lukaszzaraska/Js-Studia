@@ -1,0 +1,20 @@
+.row {
+    font-size: 30px;
+    margin: 5px;
+    background-color: rgb(175, 174, 174);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+}
+
+#random {
+    width: 100px;
+    height: 50px;
+    background-color: blueviolet;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+
+}

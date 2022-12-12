@@ -1,33 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <title>Document</title>
+    <title>Canvas</title>
 </head>
+
 <body>
-   
-  
+
+
     <div id="info">
         <div id="StartBtn">Start</div>
         <div id="ResetBtn">Reset</div>
-        <div id="range"> 
-            <p>1</p>
-            <input type="range" name="ballsNumber" min="1" max="300">
-            <p>300</p>
+        <div class="wrapper">
+            <span>Ilość kulek</span>
+            <input type="range" list="BallNumber" name="ballsNumber" min="1" max="300">
+            <datalist id="BallNumber">
+                <option value="1" label="1"></option>
+                <option value="75" label="25"></option>
+                <option value="150" label="150"></option>
+                <option value="225" label="200"></option>
+                <option value="300" label="300"></option>
+            </datalist>
         </div>
-        <div id="size"> 
-            <p>linkball min 1 %</p>
-            <input type="range"  name="sizeLinkBall" min="1" max="100">
-            <p>max 100 %</p>
-            
-            <p style="margin-left:10px;">-120</p>
-            <input type="range" value="0"  name="CursorPower" min="-120" max="120">
-            <p>120</p>
+        <div class="wrapper">
+            <span>Zasięg łączenia kulek</span>
+            <input type="range" list="LinkSize" name="sizeLinkBall" min="1" max="100">
+            <datalist id="LinkSize">
+                <option value="1" label="1 %"></option>
+                <option value="25" label="25 %"></option>
+                <option value="50" label="50 %"></option>
+                <option value="75" label="75 %"></option>
+                <option value="100" label="100 %"></option>
+            </datalist>
         </div>
+        <div class="wrapper">
+            <span>Odpychanie/przycąganie zakres</span>
+            <input type="range" value="0" list="cursorPower" name="CursorPower" min="-120" max="120">
+            <datalist id="cursorPower">
+                <option value="-120" label="-120 %"></option>
+                <option value="-60" label="-60 %"></option>
+                <option value="0" label="0"></option>
+                <option value="60" label="60 %"></option>
+                <option value="120" label="120 %"></option>
+            </datalist>
+        </div>
+
     </div>
     <script type="module" src="./main.js"></script>
 </body>
+
 </html>
