@@ -1,0 +1,76 @@
+body {
+    /* display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center; */
+}
+#Box{
+    width: 400px;
+    height: 700px;
+    border-radius: 10px;
+    z-index: 3;
+    position: relative;
+    left: 845px;
+}
+#Main {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(74, 73, 88);
+    display: flex;
+    border-radius: 20px;
+    z-index: 2;
+}
+
+#Localization{
+    display: flex;
+    z-index:3;
+    position: absolute;
+    left: -300px;
+    width: 300px;
+    height: 700px;
+    background-color: rgb(105, 103, 103);
+    border-radius: 10px;
+    flex-direction: column;
+
+}
+#location{
+    display: flex;
+    font-size: 30px;
+    justify-content: center;
+    margin-top: 30px;
+    cursor:default;
+}
+#BackLoca{
+    z-index:3;
+    position: absolute;
+    left: -395px;
+    width: 397px;
+    height: 700px;
+    background-color: rgb(255, 255, 255);
+}
+#search{
+margin-left: auto;
+margin-right: auto;
+height: 30px;
+width: 80%;
+border-radius: 10px;
+}
+#UpdateLocation{
+color: rgb(53, 201, 201);
+display: flex;
+justify-content: center;
+margin-top: 15px;
+cursor: pointer;
+}
+
+.material-symbols-outlined {
+    font-size: 33px !important;
+
+}
+.MenuCss{
+    display: flex;
+    margin: 30px;
+    height: fit-content;
+    cursor:pointer;
+}
+
