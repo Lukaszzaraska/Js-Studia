@@ -12,8 +12,7 @@
 </head>
 
 <body>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
     </script>
     <div id="Box">
         <div id="Localization">
@@ -23,7 +22,7 @@
                 </span>
 
             </div>
-            <input id="search" list="hint" placeholder="Find city" />
+            <input id="search" list="hint" placeholder="Select main city" />
             <datalist id="hint">
 
             </datalist>
@@ -34,11 +33,28 @@
                 <div id="cityName"></div>
             </div>
             <div id="UpdateLocation">Aktualizacja lokalizacji</div>
-            <div id="LastUpdate">Zaktualizowano ostatni raz o  </div>
-            <div id="OtherLocation"> 
+            <div id="LastUpdate">Zaktualizowano ostatni raz o </div>
+            <div id="OtherLocation">
                 <div id="OtherLocationTitle">Inne lokalizacje</div>
-                <div id="CityList"></div>
-                <div id="AddLocation">Dodaj lokalizacje</div>
+                <div id="CityList">
+                    <div id="AddLocation">
+                        <div id="plus">
+                            <span class="material-symbols-outlined center">
+                                add
+                            </span>
+                        </div>
+                        <input list="hintOther" placeholder="Find city" id="SearchManyCity" />
+                        <datalist id="hintOther">
+
+                        </datalist>
+
+                    </div>
+                    <div id="NewLocation">
+
+                    </div>
+                </div>
+
+
             </div>
         </div>
         <div id="BackLoca">
@@ -59,17 +75,18 @@
                 <div id="left">
                     <div id="temperature"></div>
                     <div id="locationMain"></div>
+                    <div id="feelsMain"></div>
                 </div>
                 <div id="right"></div>
             </div>
-            <div class="Tile chartOptions" id="chartOptionsID" >
+            <div class="Tile chartOptions" id="chartOptionsID">
                 <div id="chartTime"></div>
                 <div id="chartIcon"></div>
                 <div id="chartTempe"></div>
                 <div id="chart"><canvas id="myChart" style="width:100%;height: 100px;"></canvas></div>
             </div>
             <div class="Tile">
-
+                <div id="NextWeather"> </div>
             </div>
         </div>
     </div>
