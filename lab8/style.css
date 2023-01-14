@@ -303,6 +303,7 @@ body {
 .NewCard {
     display: flex;
     align-items: center;
+    justify-content: space-around;
     width: 90%;
     margin-top: 5px;
     height: 60px;
@@ -316,4 +317,24 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.deleteBtn {
+    cursor: pointer;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 22px !important;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(228, 228, 228);
+}
+
+.IconOther {
+    width: 40px;
+    height: 40px;
+    background-size: cover;
 }
