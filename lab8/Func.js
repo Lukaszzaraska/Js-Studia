@@ -5,12 +5,13 @@ const chartTempe = document.querySelector("#chartTempe")
 export const DrawChart = async (data) => {
 
     let ArrayList = (await data).list
+   // console.log(ArrayList)
     let ArrayTemp = []
     let ArrayIcon = []
     let ArrayTime = []
     for (let index = 0; index < 5; index++) {
         ArrayTime.push((new Date(ArrayList[index].dt_txt).toLocaleTimeString().slice(0, -3)))
-        ArrayTemp.push(Math.round(kelvinToCelsius(ArrayList[index].main.temp)))
+        ArrayTemp.push(kelvinToCelsius(ArrayList[index].main.temp))
         ArrayIcon.push(ArrayList[index].weather[0].icon)
     }
 
@@ -68,10 +69,9 @@ export const DrawChart = async (data) => {
         }
     });
 
-    localStorage.setItem("Chart", JSON.stringify(await data))
 
 };
 
 export function kelvinToCelsius(kelvin) {
-    return kelvin - 273.15;
-  }
+    return Math.round(kelvin - 273.15);
+}

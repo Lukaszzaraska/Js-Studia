@@ -1,4 +1,5 @@
 
+import { WFromPosition, CFromPosition, CityToPosition, CityToLetter, HoursWeather, GetWeatherRaw } from "./Api.js"
 import { } from "./Animation.js"
 import { DrawChart, kelvinToCelsius } from "./Func.js"
 const SearchInput = document.querySelector("#search")
@@ -14,10 +15,23 @@ let BtnsDelete = document.querySelectorAll(".deleteBtn")
 const NextWeather = document.querySelector("#NextWeather")
 const AddLocation = document.querySelector("#AddLocation")
 const NewLocation = document.querySelector("#NewLocation")
-const APIkey = "a079da55488e330cc48423d6e3589700";
+
 
 SearchInput.addEventListener("keyup", Serach)
 SearchManyCity.addEventListener("keyup", SerachOther)
+
+class Card {
+  constructor(TimeUpdate, Localization, Position, Icon, Temperature, Feels_like,ChartData ,Main) {
+    this.TimeUpdate = TimeUpdate
+    this.Localization = Localization
+    this.Position = Position
+    this.Icon = Icon
+    this.Temperature = Temperature
+    this.Feels_like = Feels_like
+    this.ChartData = ChartData
+    this.Main = Main
+  }
+}
 
 let switcher = true;
 let Position;
@@ -27,34 +41,57 @@ let LastUpdateTime;
 let actualCity = CityName.value;
 let Timer;
 let TimerOther;
-let Cards = [];
+let CardsArray = [];
+let ActualCard
 let Indexer = 0;
-window.onload = () => {
 
-  let array = JSON.parse(localStorage.getItem("Cards"))
-  array.forEach(x => {
-    Cards.push(x)
+window.addEventListener('beforeunload', function () {
+
+  CardsArray.forEach(card => {
+    if (card.Main == true) {
+      card = ActualCard
+    }
   })
+ 
 
-  CreateNewCity(Cards)
-  let localization = JSON.parse(localStorage.getItem("Localization"));
-  LastUpdateTime = new Date(JSON.parse(localStorage.getItem("UpdateTime")))
-  Position = JSON.parse(localStorage.getItem("Position"))
-  LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
-  if (localization == undefined) {
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    console.log(CardsArray)
+  localStorage.setItem("CardsArray", JSON.stringify(CardsArray))
+
+});
+
+window.onload = () => {
+ 
+  CardsArray = JSON.parse(localStorage.getItem("CardsArray"))
+
+  console.log(CardsArray.length)
+
+  if (CardsArray.length != 0) {
+    console.log(CardsArray)
+    CardsArray.forEach(card => {
+      if (card.Main == true) {
+        ActualCard = card
+        let date = new Date(card.TimeUpdate)
+        LastUpdate.innerHTML = `Zaktualizowano o ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
+        temperature.innerHTML = `${card.Temperature} &#8451;`
+        CityName.innerHTML = `<span>${card.Localization}</span>`
+        locationMain.innerHTML = `<span>${card.Localization}</span>`
+        FeelsLocation.innerHTML = `Odczucie ${card.Feels_like} &#8451;`
+        DrawChart(HoursWeather(card.Position))
+        NextDayWeather(HoursWeather(card.Position))
+        //tutaj robimy główny widok tego miasta
+      } else {
+        ReBuildOtherCityList()
+        //tutaj dodajemy liste innych miast
+      }
+    })
+  } else {
+   CardsArray = [];
+
+   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    //Tutaj czytamy dane z przeglądarki
   }
 
-  let Chart = JSON.parse(localStorage.getItem("Chart"));
-  let MainIcon = JSON.parse(localStorage.getItem("MainIcon"))
-  WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${MainIcon}@2x.png)`;
-  DrawChart(Chart)
-  NextDayWeather(HoursWeather(Position))
-  temperature.innerHTML = `${Math.round((kelvinToCelsius(JSON.parse(localStorage.getItem("Temperature")))))} &#8451;`
-  actualCity = localization
-  CityName.innerHTML = `<span>${actualCity}</span>`
-  locationMain.innerHTML = `<span>${actualCity}</span>`
-  FeelsLocation.innerHTML = `Odczucie ${JSON.parse(localStorage.getItem("FeelsTemp"))} &#8451;`
 }
 
 
@@ -71,61 +108,44 @@ const ListLocation = (event) => {
 }
 AddLocation.addEventListener("click", ListLocation)
 
-const GetWeather = async () => {
+const GetWeather = async (card) => {
 
-  const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${Position.latitude}&lon=${Position.longitude}&appid=${APIkey}`);
-  const data = await response.json();
-
-  localStorage.setItem("Temperature", JSON.stringify(data.main.temp))
-  localStorage.setItem("FeelsTemp", JSON.stringify(Math.round(kelvinToCelsius(data.main.feels_like))))
-  temperature.innerHTML = `${Math.round((kelvinToCelsius(data.main.temp)))} &#8451;`
-  locationMain.innerHTML = `<span>${actualCity}</span>`
-  WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png)`;
-  localStorage.setItem("MainIcon", JSON.stringify(data.weather[0].icon))
-  DrawChart(HoursWeather(Position))
-  NextDayWeather(HoursWeather(Position))
+  const data = await WFromPosition(card.Position)
+  card.Temperature = kelvinToCelsius(data.main.temp)
+  card.Feels_like = kelvinToCelsius(data.main.feels_like)
+  
+  card.Icon = data.weather[0].icon
+  temperature.innerHTML = `${card.Temperature} &#8451;`
+  locationMain.innerHTML = `<span>${card.Localization}</span>`
+  CityName.innerHTML = `<span>${card.Localization}</span>`
+  WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
+  CardsArray.push(card)
+ // DrawChart(HoursWeather(card.Position))
+ console.log("GetWeather ",CardsArray)
+  NextDayWeather(HoursWeather(card.Position))
 
 }
 
 const successCallback = async (position) => {
-  Position = { latitude: (position.coords.latitude), longitude: (position.coords.longitude) };
-  const response = await fetch(`http://geodb-free-service.wirefreethought.com/v1/geo/locations/${position.coords.latitude}+${position.coords.longitude}/nearbyCities?limit=1&offset=0&radius=100`);
-  const data = await response.json();
-  LastUpdateTime = new Date();
-  LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
+  console.log("bumm")
+  let LastUpdateTime = new Date();
+  let positionCard = { latitude: (position.coords.latitude), longitude: (position.coords.longitude) };
+  const data = await CFromPosition(positionCard)
+  let card = new Card(LastUpdateTime, data.data[0].city, positionCard, undefined, undefined, undefined,undefined, true)
 
-  localStorage.setItem("UpdateTime", JSON.stringify(LastUpdateTime))
-  let chartHTML = document.querySelector("#chartOptionsID")
 
-  localStorage.setItem("Chart", chartHTML)
-  localStorage.setItem("Localization", JSON.stringify(data.data[0].city))
-  localStorage.setItem("Position", JSON.stringify({ latitude: (position.coords.latitude), longitude: (position.coords.longitude) }))
-  actualCity = data.data[0].city
-  CityName.innerHTML = actualCity
-  locationMain.innerHTML = actualCity
-  GetWeather()
+  GetWeather(card)
 };
 
-async function CityToPosition(name) {
 
-  const response = await fetch(`http://geodb-free-service.wirefreethought.com/v1/geo/cities?limit=1&offset=0&namePrefix=${name}`);
-  const data = await response.json();
-  return data
-}
-const HoursWeather = async (position) => {
-  const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${position.latitude}&lon=${position.longitude}&appid=${APIkey}`);
-  const data = await response.json();
-  return data
-};
+
 const getWeatherByLetter = async (letter) => {
   clearTimeout(Timer)
   let DataList = document.querySelector("#hint")
   let newOptionElement = document.createElement("option");
   DataList.innerHTML = "";
 
-
-  const response = await fetch(`http://geodb-free-service.wirefreethought.com/v1/geo/cities?limit=10&offset=0&namePrefix=${letter}`);
-  const data = await response.json();
+  const data = await CityToLetter(letter)
   cities = []
 
   data.data.forEach(element => {
@@ -139,18 +159,29 @@ const getWeatherByLetter = async (letter) => {
   for (let i = 0; i < options.length; i++) {
     let option = options[i];
     if (option.value == letter) {
-      SearchManyCity.text.value = ""
+      SearchManyCity.value = ""
       let city = await CityToPosition(option.value)
       const { latitude, longitude } = city.data[0]
+      CardsArray.forEach((card) => {
+        card.Main = false
+      })
+      
       LastUpdateTime = new Date();
-      LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
-      localStorage.setItem("UpdateTime", JSON.stringify(LastUpdateTime))
-      localStorage.setItem("Localization", JSON.stringify(data.data[0].city))
-      Position = { latitude, longitude }
-      localStorage.setItem("Position", JSON.stringify(Position))
-      actualCity = data.data[0].city
-      CityName.innerHTML = actualCity
-      GetWeather()
+      ActualCard.LastUpdate = LastUpdateTime
+      ActualCard.Localization = city
+      ActualCard.Position = { latitude, longitude }
+
+      LastUpdate.innerHTML = `Zaktualizowano o ${ActualCard.LastUpdate.getHours()}:${ActualCard.LastUpdate.getMinutes()}:${ActualCard.LastUpdate.getSeconds()}`
+      CityName.innerHTML = ActualCard.Localization
+
+      console.log("getWeatherByLetter ",CardsArray)
+      let card = new Card(LastUpdateTime, data.data[0].city, ActualCard.Position, undefined, undefined, undefined,undefined, true)
+      // if (!CardsArray.includes(card.Localization)) {
+      //   CardsArray.push(card)
+      // }
+      await CreateNewCity()
+/////////////////////////////////////////////////////////////
+      GetWeather(card)
     }
   }
 }
@@ -161,8 +192,8 @@ const getLocationByLetter = async (letter) => {
   DataList.innerHTML = "";
 
 
-  const response = await fetch(`http://geodb-free-service.wirefreethought.com/v1/geo/cities?limit=10&offset=0&namePrefix=${letter}`);
-  const data = await response.json();
+
+  const data = await CityToLetter(letter)
   citiesOther = []
 
   data.data.forEach(element => {
@@ -181,30 +212,19 @@ const getLocationByLetter = async (letter) => {
       let LastUpdateTime = new Date();
       const { latitude, longitude } = city.data[0]
       let positionCard = { latitude, longitude }
-      let Card = {
-        TimeUpdate: LastUpdateTime,
-        Localization: data.data[0].city,
-        Position: positionCard
-      }
+      let card = new Card(LastUpdateTime, data.data[0].city, positionCard, undefined, undefined, undefined,undefined, false)
 
-      if (!Cards.includes(Card.Localization)) {
-        Cards.push(Card)
+
+      if (!CardsArray.includes(card.Localization)) {
+        CardsArray.push(card)
       }
 
       await CreateNewCity()
 
     }
   }
-  localStorage.setItem("Cards", JSON.stringify(Cards))
 }
-const GetWeatherRaw = async (Pos) => {
 
-  const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${Pos.latitude}&lon=${Pos.longitude}&appid=${APIkey}`);
-  const data = await response.json();
-  let weatherOther = [Math.round((kelvinToCelsius(data.main.temp))), data.weather[0].icon]
-  return weatherOther
-
-}
 const NextDayWeather = async (data) => {
 
   NextWeather.innerHTML = ""
@@ -269,6 +289,7 @@ const errorCallback = (error) => {
   console.log(error);
 };
 UpdateLocation.addEventListener("click", () => {
+  CardsArray = [];
   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 })
 
@@ -296,12 +317,14 @@ function SerachOther() {
 const CreateNewCity = async () => {
   NewLocation.innerHTML = ""
   Indexer = 0
-
-  Cards.forEach(async card => {
+console.log("CreateNewCity : ",CardsArray)
+  CardsArray.forEach(async card => {
     let data = await GetWeatherRaw(card.Position);
     let Icon = data[1];
     let temperatureOther = data[0];
-
+    card.Icon = Icon
+    card.Temperature = temperatureOther
+    card.Feels_like =  data[2]
     let NewCard = document.createElement("div")
 
     NewCard.setAttribute("data-id", Indexer)
@@ -337,15 +360,73 @@ const CreateNewCity = async () => {
   })
 }
 
+const ReBuildOtherCityList = async () => {
+  NewLocation.innerHTML=""
+  CardsArray.forEach(async card => {
+
+    let NewCard = document.createElement("div")
+    NewCard.setAttribute("data-id", Indexer)
+    Indexer += 1;
+    let IconOther = document.createElement("div")
+    let TempOther = document.createElement("div")
+    let deleteBtn = document.createElement("div")
+    let left = document.createElement("div")
+    let right = document.createElement("div")
+    left.setAttribute("class", "leftRow")
+    right.setAttribute("class", "rightRow")
+    NewCard.setAttribute("class", "NewCard")
+    deleteBtn.setAttribute("class", "deleteBtn material-symbols-outlined")
+    deleteBtn.innerHTML = "delete"
+    IconOther.setAttribute("class", "IconOther")
+    TempOther.setAttribute("class", "Tempother")
+    IconOther.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
+    TempOther.innerHTML = `${card.Temperature} &#8451;`
+    let NewCardCity = document.createElement("div")
+    NewCardCity.innerHTML = card.Localization
+    left.appendChild(NewCardCity)
+    right.appendChild(IconOther)
+    right.appendChild(TempOther)
+    right.appendChild(deleteBtn)
+    NewCard.appendChild(left)
+    NewCard.appendChild(right)
+    NewLocation.appendChild(NewCard)
+
+    BtnsDelete = document.querySelectorAll(".deleteBtn")
+
+  })
+}
 document.addEventListener("click", (event) => {
 
+try {
   if (event.target.className == "deleteBtn material-symbols-outlined") {
     const obj = document.querySelector(`[data-id='${event.target.parentNode.parentNode.getAttribute('data-id')}']`);
     let index = event.target.parentNode.parentNode.getAttribute('data-id')
     NewLocation.removeChild(obj)
-    Cards.splice(index, 1)
-    localStorage.setItem("Cards", JSON.stringify(Cards))
+    CardsArray.splice(index, 1)
   }
+  else if (event.target.className == "NewCard" || event.target.parentNode.parentNode.className == "NewCard") {
+    let index = event.target.parentNode.parentNode.getAttribute('data-id') == undefined ? event.target.getAttribute('data-id') : event.target.parentNode.parentNode.getAttribute('data-id')
+
+    let Data = CardsArray[index]
+    let localization = Data.Localization;
+    LastUpdateTime = new Date(Data.TimeUpdate)
+    Position = Data.Position
+    LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
+
+    WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Data.Icon}@2x.png)`;
+    DrawChart(HoursWeather(Data.Position))
+    NextDayWeather(HoursWeather(Position))
+    temperature.innerHTML = `${kelvinToCelsius(Data.Temperature)} &#8451;`
+    actualCity = localization
+    CityName.innerHTML = `<span>${actualCity}</span>`
+    locationMain.innerHTML = `<span>${actualCity}</span>`
+    FeelsLocation.innerHTML = `Odczucie ${Data.Feels_like} &#8451;`
+
+  }
+} catch (error) {
+  
+}
+  
 })
 
 
