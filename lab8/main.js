@@ -21,7 +21,7 @@ SearchInput.addEventListener("keyup", Serach)
 SearchManyCity.addEventListener("keyup", SerachOther)
 
 class Card {
-  constructor(TimeUpdate, Localization, Position, Icon, Temperature, Feels_like,ChartData ,Main) {
+  constructor(TimeUpdate, Localization, Position, Icon, Temperature, Feels_like, ChartData, Main, Id, List) {
     this.TimeUpdate = TimeUpdate
     this.Localization = Localization
     this.Position = Position
@@ -30,6 +30,8 @@ class Card {
     this.Feels_like = Feels_like
     this.ChartData = ChartData
     this.Main = Main
+    this.Id = Id
+    this.List = List
   }
 }
 
@@ -38,38 +40,36 @@ let Position;
 let cities = [];
 let citiesOther = [];
 let LastUpdateTime;
-let actualCity = CityName.value;
+let actualCity = "";
 let Timer;
 let TimerOther;
 let CardsArray = [];
-let ActualCard
-let Indexer = 0;
+let MainExist = false
+
 
 window.addEventListener('beforeunload', function () {
 
+  let ArrayNoList = []
   CardsArray.forEach(card => {
-    if (card.Main == true) {
-      card = ActualCard
+    if (card.List == true) {
+      ArrayNoList.push(card)
     }
   })
- 
 
-    console.log(CardsArray)
-  localStorage.setItem("CardsArray", JSON.stringify(CardsArray))
+  localStorage.setItem("CardsArray", JSON.stringify(ArrayNoList))
 
 });
 
 window.onload = () => {
- 
-  CardsArray = JSON.parse(localStorage.getItem("CardsArray"))
 
-  console.log(CardsArray.length)
+  CardsArray = JSON.parse(localStorage.getItem("CardsArray"))
+  console.log(CardsArray)
 
   if (CardsArray.length != 0) {
-    console.log(CardsArray)
+
     CardsArray.forEach(card => {
       if (card.Main == true) {
-        ActualCard = card
+        MainExist = true
         let date = new Date(card.TimeUpdate)
         LastUpdate.innerHTML = `Zaktualizowano o ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
         WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
@@ -85,10 +85,15 @@ window.onload = () => {
         //tutaj dodajemy liste innych miast
       }
     })
+    if (!MainExist) {
+      // CardsArray.forEach(card => {
+      //   card.Main = false
+      // })
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }
   } else {
-   CardsArray = [];
-
-   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    CardsArray = [];
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     //Tutaj czytamy dane z przeglądarki
   }
 
@@ -104,8 +109,8 @@ const ListLocation = (event) => {
     }
     switcher = !switcher
   }
-
 }
+
 AddLocation.addEventListener("click", ListLocation)
 
 const GetWeather = async (card) => {
@@ -113,30 +118,31 @@ const GetWeather = async (card) => {
   const data = await WFromPosition(card.Position)
   card.Temperature = kelvinToCelsius(data.main.temp)
   card.Feels_like = kelvinToCelsius(data.main.feels_like)
-  
+
   card.Icon = data.weather[0].icon
   temperature.innerHTML = `${card.Temperature} &#8451;`
   locationMain.innerHTML = `<span>${card.Localization}</span>`
   CityName.innerHTML = `<span>${card.Localization}</span>`
+  LastUpdate.innerHTML = `Zaktualizowano o ${card.TimeUpdate.getHours()}:${card.TimeUpdate.getMinutes()}:${card.TimeUpdate.getSeconds()}`
   WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
-  CardsArray.push(card)
- // DrawChart(HoursWeather(card.Position))
- console.log("GetWeather ",CardsArray)
-  NextDayWeather(HoursWeather(card.Position))
-
+  FeelsLocation.innerHTML = `Odczucie ${card.Feels_like} &#8451;`
+  if (!CardsArray.includes(card.Localization)) {
+    CardsArray.push(card)
+  }
+  // DrawChart(HoursWeather(card.Position))
+  await NextDayWeather(HoursWeather(card.Position))
 }
 
 const successCallback = async (position) => {
-  console.log("bumm")
+
   let LastUpdateTime = new Date();
   let positionCard = { latitude: (position.coords.latitude), longitude: (position.coords.longitude) };
   const data = await CFromPosition(positionCard)
-  let card = new Card(LastUpdateTime, data.data[0].city, positionCard, undefined, undefined, undefined,undefined, true)
+  let card = new Card(LastUpdateTime, data.data[0].city, positionCard, undefined, undefined, undefined, undefined, true, CardsArray.length, false)
 
-
-  GetWeather(card)
+  await GetWeather(card)
+  await DrawChart(HoursWeather(card.Position))
 };
-
 
 
 const getWeatherByLetter = async (letter) => {
@@ -156,32 +162,34 @@ const getWeatherByLetter = async (letter) => {
   });
   DataList = document.querySelector("#hint")
   let options = DataList.options;
+
   for (let i = 0; i < options.length; i++) {
     let option = options[i];
     if (option.value == letter) {
-      SearchManyCity.value = ""
+      clearTimeout(Timer)
+
+      SearchInput.value = ""
       let city = await CityToPosition(option.value)
+
       const { latitude, longitude } = city.data[0]
       CardsArray.forEach((card) => {
         card.Main = false
       })
-      
+
       LastUpdateTime = new Date();
-      ActualCard.LastUpdate = LastUpdateTime
-      ActualCard.Localization = city
-      ActualCard.Position = { latitude, longitude }
 
-      LastUpdate.innerHTML = `Zaktualizowano o ${ActualCard.LastUpdate.getHours()}:${ActualCard.LastUpdate.getMinutes()}:${ActualCard.LastUpdate.getSeconds()}`
-      CityName.innerHTML = ActualCard.Localization
-
-      console.log("getWeatherByLetter ",CardsArray)
-      let card = new Card(LastUpdateTime, data.data[0].city, ActualCard.Position, undefined, undefined, undefined,undefined, true)
+      LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
+      CityName.innerHTML = city.data[0].city //ActualCard.Localization
+      let card = new Card(LastUpdateTime, data.data[0].city, { latitude, longitude }, undefined, undefined, undefined, undefined, true, CardsArray.length, false)
       // if (!CardsArray.includes(card.Localization)) {
       //   CardsArray.push(card)
       // }
-      await CreateNewCity()
-/////////////////////////////////////////////////////////////
-      GetWeather(card)
+      //await CreateNewCity()
+      /////////////////////////////////////////////////////////////
+
+      await GetWeather(card)
+      await DrawChart(HoursWeather(card.Position))
+
     }
   }
 }
@@ -190,8 +198,6 @@ const getLocationByLetter = async (letter) => {
   let DataList = document.querySelector("#hintOther")
   let newOptionElement = document.createElement("option");
   DataList.innerHTML = "";
-
-
 
   const data = await CityToLetter(letter)
   citiesOther = []
@@ -204,6 +210,7 @@ const getLocationByLetter = async (letter) => {
   });
   DataList = document.querySelector("#hintOther")
   let options = DataList.options;
+
   for (let i = 0; i < options.length; i++) {
     let option = options[i];
     if (option.value == letter) {
@@ -212,19 +219,35 @@ const getLocationByLetter = async (letter) => {
       let LastUpdateTime = new Date();
       const { latitude, longitude } = city.data[0]
       let positionCard = { latitude, longitude }
-      let card = new Card(LastUpdateTime, data.data[0].city, positionCard, undefined, undefined, undefined,undefined, false)
-
+      let card = new Card(LastUpdateTime, data.data[0].city, positionCard, undefined, undefined, undefined, undefined, false, CardsArray.length, true)
 
       if (!CardsArray.includes(card.Localization)) {
         CardsArray.push(card)
       }
-
       await CreateNewCity()
 
     }
   }
 }
 
+function Serach() {
+
+  if (this.value != "") {
+    Timer = setTimeout(() => getWeatherByLetter(this.value), 300)
+  } else {
+    cities = []
+    clearTimeout(Timer)
+  }
+}
+function SerachOther() {
+
+  if (this.value != "") {
+    TimerOther = setTimeout(() => getLocationByLetter(this.value), 300)
+  } else {
+    citiesOther = []
+    clearTimeout(TimerOther)
+  }
+}
 const NextDayWeather = async (data) => {
 
   NextWeather.innerHTML = ""
@@ -272,7 +295,6 @@ const NextDayWeather = async (data) => {
     let leftRow = document.createElement("div")
     leftRow.setAttribute("class", "leftRow")
 
-
     leftRow.appendChild(day)
     rightRow.appendChild(dayIcon)
     rightRow.appendChild(nightIcon)
@@ -284,149 +306,139 @@ const NextDayWeather = async (data) => {
   }
 }
 
-
 const errorCallback = (error) => {
   console.log(error);
 };
-UpdateLocation.addEventListener("click", () => {
+UpdateLocation.addEventListener("click", async () => {
   CardsArray = [];
+  //  ActualCard ="" //testowe
   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  await ReBuildOtherCityList()
 })
 
 
-
-function Serach() {
-
-  if (this.value != "") {
-    Timer = setTimeout(() => getWeatherByLetter(this.value), 300)
-  } else {
-    cities = []
-    clearTimeout(Timer)
-  }
-}
-function SerachOther() {
-
-  if (this.value != "") {
-    TimerOther = setTimeout(() => getLocationByLetter(this.value), 300)
-  } else {
-    citiesOther = []
-    clearTimeout(TimerOther)
-  }
-}
-
 const CreateNewCity = async () => {
   NewLocation.innerHTML = ""
-  Indexer = 0
-console.log("CreateNewCity : ",CardsArray)
+
   CardsArray.forEach(async card => {
-    let data = await GetWeatherRaw(card.Position);
-    let Icon = data[1];
-    let temperatureOther = data[0];
-    card.Icon = Icon
-    card.Temperature = temperatureOther
-    card.Feels_like =  data[2]
-    let NewCard = document.createElement("div")
+    if (card.List == true) {
+      let data = await GetWeatherRaw(card.Position);
+      let Icon = data[1];
+      let temperatureOther = data[0];
+      card.Icon = Icon
+      card.Temperature = temperatureOther
+      card.Feels_like = data[2]
+      let NewCard = document.createElement("div")
 
-    NewCard.setAttribute("data-id", Indexer)
-    Indexer += 1;
+      NewCard.setAttribute("data-id", card.Id)
 
-    let IconOther = document.createElement("div")
-    let TempOther = document.createElement("div")
-    let deleteBtn = document.createElement("div")
-    let left = document.createElement("div")
-    let right = document.createElement("div")
-    left.setAttribute("class", "leftRow")
-    right.setAttribute("class", "rightRow")
-    NewCard.setAttribute("class", "NewCard")
-    deleteBtn.setAttribute("class", "deleteBtn material-symbols-outlined")
-    deleteBtn.innerHTML = "delete"
+      let IconOther = document.createElement("div")
+      let TempOther = document.createElement("div")
+      let deleteBtn = document.createElement("div")
+      let left = document.createElement("div")
+      let right = document.createElement("div")
+      left.setAttribute("class", "leftRow")
+      right.setAttribute("class", "rightRow")
+      NewCard.setAttribute("class", "NewCard")
+      deleteBtn.setAttribute("class", "deleteBtn material-symbols-outlined")
+      deleteBtn.innerHTML = "delete"
 
-    IconOther.setAttribute("class", "IconOther")
-    TempOther.setAttribute("class", "Tempother")
-    IconOther.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Icon}@2x.png)`;
-    TempOther.innerHTML = `${temperatureOther} &#8451;`
-    let NewCardCity = document.createElement("div")
-    NewCardCity.innerHTML = card.Localization
-    left.appendChild(NewCardCity)
-    right.appendChild(IconOther)
-    right.appendChild(TempOther)
-    right.appendChild(deleteBtn)
-    NewCard.appendChild(left)
-    NewCard.appendChild(right)
-    NewLocation.appendChild(NewCard)
+      IconOther.setAttribute("class", "IconOther")
+      TempOther.setAttribute("class", "Tempother")
+      IconOther.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Icon}@2x.png)`;
+      TempOther.innerHTML = `${temperatureOther} &#8451;`
+      let NewCardCity = document.createElement("div")
+      NewCardCity.innerHTML = card.Localization
+      left.appendChild(NewCardCity)
+      right.appendChild(IconOther)
+      right.appendChild(TempOther)
+      right.appendChild(deleteBtn)
+      NewCard.appendChild(left)
+      NewCard.appendChild(right)
+      NewLocation.appendChild(NewCard)
 
-    BtnsDelete = document.querySelectorAll(".deleteBtn")
-
+      BtnsDelete = document.querySelectorAll(".deleteBtn")
+    }
   })
 }
 
 const ReBuildOtherCityList = async () => {
-  NewLocation.innerHTML=""
+  NewLocation.innerHTML = ""
   CardsArray.forEach(async card => {
+    if (card.List == true) {
+      let NewCard = document.createElement("div")
+      NewCard.setAttribute("data-id", card.Id)
+      let IconOther = document.createElement("div")
+      let TempOther = document.createElement("div")
+      let deleteBtn = document.createElement("div")
+      let left = document.createElement("div")
+      let right = document.createElement("div")
+      left.setAttribute("class", "leftRow")
+      right.setAttribute("class", "rightRow")
+      NewCard.setAttribute("class", "NewCard")
+      deleteBtn.setAttribute("class", "deleteBtn material-symbols-outlined")
+      deleteBtn.innerHTML = "delete"
+      IconOther.setAttribute("class", "IconOther")
+      TempOther.setAttribute("class", "Tempother")
+      IconOther.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
+      TempOther.innerHTML = `${card.Temperature} &#8451;`
+      let NewCardCity = document.createElement("div")
+      NewCardCity.innerHTML = card.Localization
+      left.appendChild(NewCardCity)
+      right.appendChild(IconOther)
+      right.appendChild(TempOther)
+      right.appendChild(deleteBtn)
+      NewCard.appendChild(left)
+      NewCard.appendChild(right)
+      NewLocation.appendChild(NewCard)
 
-    let NewCard = document.createElement("div")
-    NewCard.setAttribute("data-id", Indexer)
-    Indexer += 1;
-    let IconOther = document.createElement("div")
-    let TempOther = document.createElement("div")
-    let deleteBtn = document.createElement("div")
-    let left = document.createElement("div")
-    let right = document.createElement("div")
-    left.setAttribute("class", "leftRow")
-    right.setAttribute("class", "rightRow")
-    NewCard.setAttribute("class", "NewCard")
-    deleteBtn.setAttribute("class", "deleteBtn material-symbols-outlined")
-    deleteBtn.innerHTML = "delete"
-    IconOther.setAttribute("class", "IconOther")
-    TempOther.setAttribute("class", "Tempother")
-    IconOther.style.backgroundImage = `url(http://openweathermap.org/img/wn/${card.Icon}@2x.png)`;
-    TempOther.innerHTML = `${card.Temperature} &#8451;`
-    let NewCardCity = document.createElement("div")
-    NewCardCity.innerHTML = card.Localization
-    left.appendChild(NewCardCity)
-    right.appendChild(IconOther)
-    right.appendChild(TempOther)
-    right.appendChild(deleteBtn)
-    NewCard.appendChild(left)
-    NewCard.appendChild(right)
-    NewLocation.appendChild(NewCard)
-
-    BtnsDelete = document.querySelectorAll(".deleteBtn")
+      BtnsDelete = document.querySelectorAll(".deleteBtn")
+    }
 
   })
 }
-document.addEventListener("click", (event) => {
+document.addEventListener("click", async (event) => {
 
-try {
-  if (event.target.className == "deleteBtn material-symbols-outlined") {
-    const obj = document.querySelector(`[data-id='${event.target.parentNode.parentNode.getAttribute('data-id')}']`);
-    let index = event.target.parentNode.parentNode.getAttribute('data-id')
-    NewLocation.removeChild(obj)
-    CardsArray.splice(index, 1)
+  try {
+    if (event.target.className == "deleteBtn material-symbols-outlined") {
+      const obj = document.querySelector(`[data-id='${event.target.parentNode.parentNode.getAttribute('data-id')}']`);
+      let index = event.target.parentNode.parentNode.getAttribute('data-id')
+      let Data = CardsArray.find(card=>card.Id==index)
+      NewLocation.removeChild(obj)
+      CardsArray.splice(CardsArray.indexOf(Data), 1)
+    }
+    else if (event.target.className == "NewCard" || event.target.parentNode.parentNode.className == "NewCard") {
+      let index = event.target.parentNode.parentNode.getAttribute('data-id') == undefined ? event.target.getAttribute('data-id') : event.target.parentNode.parentNode.getAttribute('data-id')
+      
+      let Data = CardsArray.find(card=>card.Id==index)
+     // let Data = CardsArray[index]
+      console.log(Data)
+     // if (Data.Main == false) {
+
+        CardsArray.forEach((card) => {
+          card.Main = false
+        })
+        CardsArray[index].Main = true
+        let localization = Data.Localization;
+        LastUpdateTime = new Date(CardsArray[index].TimeUpdate)
+        Position = Data.Position
+        LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
+        WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Data.Icon}@2x.png)`;
+        DrawChart(HoursWeather(Data.Position))
+        NextDayWeather(HoursWeather(Position))
+        temperature.innerHTML = `${Data.Temperature} &#8451;`
+        actualCity = localization
+        CityName.innerHTML = `<span>${actualCity}</span>`
+        locationMain.innerHTML = `<span>${actualCity}</span>`
+        FeelsLocation.innerHTML = `Odczucie ${Data.Feels_like} &#8451;`
+        await ReBuildOtherCityList()
+   //   }
+
+    }
+  } catch (error) {
+    console.log(error)
   }
-  else if (event.target.className == "NewCard" || event.target.parentNode.parentNode.className == "NewCard") {
-    let index = event.target.parentNode.parentNode.getAttribute('data-id') == undefined ? event.target.getAttribute('data-id') : event.target.parentNode.parentNode.getAttribute('data-id')
 
-    let Data = CardsArray[index]
-    let localization = Data.Localization;
-    LastUpdateTime = new Date(Data.TimeUpdate)
-    Position = Data.Position
-    LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
-
-    WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Data.Icon}@2x.png)`;
-    DrawChart(HoursWeather(Data.Position))
-    NextDayWeather(HoursWeather(Position))
-    temperature.innerHTML = `${kelvinToCelsius(Data.Temperature)} &#8451;`
-    actualCity = localization
-    CityName.innerHTML = `<span>${actualCity}</span>`
-    locationMain.innerHTML = `<span>${actualCity}</span>`
-    FeelsLocation.innerHTML = `Odczucie ${Data.Feels_like} &#8451;`
-
-  }
-} catch (error) {
-  
-}
-  
 })
 
 
