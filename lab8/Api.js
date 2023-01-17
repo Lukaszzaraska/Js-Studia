@@ -36,6 +36,7 @@ export const GetWeatherRaw = async (Pos) => {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${Pos.latitude}&lon=${Pos.longitude}&appid=${APIkey}`);
     const data = await response.json();
     let weatherOther = [(kelvinToCelsius(data.main.temp)), data.weather[0].icon, (kelvinToCelsius(data.main.feels_like))]
+    console.log(weatherOther)
     return weatherOther
 
 }

@@ -45,7 +45,7 @@ let Timer;
 let TimerOther;
 let CardsArray = [];
 let MainExist = false
-
+let ActualCard ;
 
 window.addEventListener('beforeunload', function () {
 
@@ -63,12 +63,13 @@ window.addEventListener('beforeunload', function () {
 window.onload = () => {
 
   CardsArray = JSON.parse(localStorage.getItem("CardsArray"))
-  console.log(CardsArray)
+
 
   if (CardsArray.length != 0) {
 
-    CardsArray.forEach(card => {
+    CardsArray.forEach(async card => {
       if (card.Main == true) {
+
         MainExist = true
         let date = new Date(card.TimeUpdate)
         LastUpdate.innerHTML = `Zaktualizowano o ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
@@ -77,8 +78,9 @@ window.onload = () => {
         CityName.innerHTML = `<span>${card.Localization}</span>`
         locationMain.innerHTML = `<span>${card.Localization}</span>`
         FeelsLocation.innerHTML = `Odczucie ${card.Feels_like} &#8451;`
-        DrawChart(HoursWeather(card.Position))
-        NextDayWeather(HoursWeather(card.Position))
+        await DrawChart(HoursWeather(card.Position))
+        await NextDayWeather(HoursWeather(card.Position))
+        ActualCard = card
         //tutaj robimy główny widok tego miasta
       } else {
         ReBuildOtherCityList()
@@ -96,18 +98,34 @@ window.onload = () => {
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     //Tutaj czytamy dane z przeglądarki
   }
-
+  let AutomaticUpdate = setInterval(() => UpdateMain(ActualCard), 360000)
 }
 
 
+
+const UpdateMain = async (ActualCard) => {
+
+  const data = await GetWeatherRaw(ActualCard.Position)
+  temperature.innerHTML = `${data[0]} &#8451;`
+  FeelsLocation.innerHTML = `Odczucie ${data[2]} &#8451;`
+  locationMain.innerHTML = `<span>${ActualCard.Localization}</span>`
+  WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${data[1]}@2x.png)`;
+  let date = new Date()
+  LastUpdate.innerHTML = `Zaktualizowano o ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+  ActualCard.TimeUpdate = date
+}
+
 const ListLocation = (event) => {
   if (event.target.id == "AddLocation" || event.target.id == "") {
-    if (switcher) {
-      SearchManyCity.style.display = 'flex';
-    } else {
-      SearchManyCity.style.display = 'none';
+    if (CardsArray.length < 6) {
+      if (switcher) {
+        SearchManyCity.style.display = 'flex';
+      } else {
+        SearchManyCity.style.display = 'none';
+      }
+      switcher = !switcher
     }
-    switcher = !switcher
+
   }
 }
 
@@ -142,6 +160,7 @@ const successCallback = async (position) => {
 
   await GetWeather(card)
   await DrawChart(HoursWeather(card.Position))
+  ActualCard = card
 };
 
 
@@ -403,36 +422,36 @@ document.addEventListener("click", async (event) => {
     if (event.target.className == "deleteBtn material-symbols-outlined") {
       const obj = document.querySelector(`[data-id='${event.target.parentNode.parentNode.getAttribute('data-id')}']`);
       let index = event.target.parentNode.parentNode.getAttribute('data-id')
-      let Data = CardsArray.find(card=>card.Id==index)
+      let Data = CardsArray.find(card => card.Id == index)
       NewLocation.removeChild(obj)
       CardsArray.splice(CardsArray.indexOf(Data), 1)
     }
     else if (event.target.className == "NewCard" || event.target.parentNode.parentNode.className == "NewCard") {
       let index = event.target.parentNode.parentNode.getAttribute('data-id') == undefined ? event.target.getAttribute('data-id') : event.target.parentNode.parentNode.getAttribute('data-id')
-      
-      let Data = CardsArray.find(card=>card.Id==index)
-     // let Data = CardsArray[index]
-      console.log(Data)
-     // if (Data.Main == false) {
 
-        CardsArray.forEach((card) => {
-          card.Main = false
-        })
-        CardsArray[index].Main = true
-        let localization = Data.Localization;
-        LastUpdateTime = new Date(CardsArray[index].TimeUpdate)
-        Position = Data.Position
-        LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
-        WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Data.Icon}@2x.png)`;
-        DrawChart(HoursWeather(Data.Position))
-        NextDayWeather(HoursWeather(Position))
-        temperature.innerHTML = `${Data.Temperature} &#8451;`
-        actualCity = localization
-        CityName.innerHTML = `<span>${actualCity}</span>`
-        locationMain.innerHTML = `<span>${actualCity}</span>`
-        FeelsLocation.innerHTML = `Odczucie ${Data.Feels_like} &#8451;`
-        await ReBuildOtherCityList()
-   //   }
+      let Data = CardsArray.find(card => card.Id == index)
+      // let Data = CardsArray[index]
+      console.log(Data)
+      // if (Data.Main == false) {
+
+      CardsArray.forEach((card) => {
+        card.Main = false
+      })
+      CardsArray[index].Main = true
+      let localization = Data.Localization;
+      LastUpdateTime = new Date(CardsArray[index].TimeUpdate)
+      Position = Data.Position
+      LastUpdate.innerHTML = `Zaktualizowano o ${LastUpdateTime.getHours()}:${LastUpdateTime.getMinutes()}:${LastUpdateTime.getSeconds()}`
+      WeatherIcon.style.backgroundImage = `url(http://openweathermap.org/img/wn/${Data.Icon}@2x.png)`;
+      DrawChart(HoursWeather(Data.Position))
+      NextDayWeather(HoursWeather(Position))
+      temperature.innerHTML = `${Data.Temperature} &#8451;`
+      actualCity = localization
+      CityName.innerHTML = `<span>${actualCity}</span>`
+      locationMain.innerHTML = `<span>${actualCity}</span>`
+      FeelsLocation.innerHTML = `Odczucie ${Data.Feels_like} &#8451;`
+      await ReBuildOtherCityList()
+      //   }
 
     }
   } catch (error) {
